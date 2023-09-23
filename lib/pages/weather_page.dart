@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:my_weather_app/utils/sehir_db.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/fl_chart.dart';
 import 'package:my_weather_app/utils/icon_image_kontrol.dart';
+import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,10 +19,6 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  var font = GoogleFonts.notoSans(
-      textStyle: TextStyle(
-          fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500));
-
   gecmisSehirKontrol() async {
     final sehirListesi = await SehirlerDAO().sehirOku();
     if (sehirListesi.isEmpty) {
@@ -52,13 +50,13 @@ class _WeatherPageState extends State<WeatherPage> {
             children: [
               Consumer<WeatherFetch>(
                   builder: (context, value, child) =>
-                      IconImageKontrol().imageKontrol(
+                      DataControl().imageKontrol(
                         value.icon,
                         MediaQuery.of(context).size.height,
                         MediaQuery.of(context).size.width,
                       )),
               PageView(
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.horizontal,
                 children: [
                   _page1(context),
                   _page2(context),
@@ -85,16 +83,16 @@ _appbar() => AppBar(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(value.sehirText.toString(),
-                          style: GoogleFonts.rubik(
+                          style: GoogleFonts.inter(
                               textStyle: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
                                   color: value.fontRenkKontrol()))),
                       Text(value.ulkeText.toString(),
-                          style: GoogleFonts.rubik(
+                          style: GoogleFonts.inter(
                               textStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
                                   color: value.fontRenkKontrol()))),
                     ],
                   ),
@@ -128,7 +126,7 @@ _drawer(con) => Drawer(
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Row(children: [
-                  Text("Geçmiş Listesi", style: _WeatherPageState().font),
+                  Text("Geçmiş Listesi", style: Styles().bottomSheetText1),
                   SizedBox(width: 5),
                   FaIcon(
                     FontAwesomeIcons.history,
@@ -165,10 +163,7 @@ _drawer(con) => Drawer(
                                   Navigator.pop(context);
                                 },
                                 title: Text(sehir.sehirAd,
-                                    style: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.white))),
+                                    style: Styles().bottomSheetText1),
                                 trailing: IconButton(
                                     onPressed: () //şehir Silme Butonu
                                         {
@@ -198,7 +193,7 @@ _drawer(con) => Drawer(
             margin: const EdgeInsets.symmetric(horizontal: 60),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Text("Şehir Ara", style: const TextStyle(fontSize: 20)),
+            child: Text("Şehir Ara", style: Styles().bottomSheetText2),
           ),
         ),
         SizedBox(height: 15),
@@ -216,7 +211,7 @@ _drawer(con) => Drawer(
                   FaIcon(FontAwesomeIcons.searchLocation,
                       size: 20, color: Colors.white),
                   SizedBox(width: 5),
-                  Text("Konumdan Bul", style: _WeatherPageState().font),
+                  Text("Konumdan Bul", style: Styles().bottomSheetText1),
                 ])),
           ),
         ),
@@ -231,7 +226,7 @@ _page1(con) => Center(
             Consumer<WeatherFetch> //Hava Durumu Icon
                 (
               builder: (context, value, child) =>
-                  IconImageKontrol().iconKontrol(value.icon),
+                  DataControl().iconKontrol(value.icon),
             ),
             SizedBox(height: 50),
             Consumer<WeatherFetch> //Hava Durumu Detay
@@ -250,13 +245,13 @@ _page1(con) => Center(
                     Column(
                       children: [
                         Text(value.aciklama.toString(),
-                            style: GoogleFonts.rubik(
+                            style: GoogleFonts.inter(
                                 textStyle: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
                                     color: value.fontRenkKontrol()))),
                         Text("${value.derece?.toInt()} \u2103",
-                            style: GoogleFonts.notoSans(
+                            style: GoogleFonts.inter(
                                 textStyle: TextStyle(
                                     fontSize: 50,
                                     color: value.fontRenkKontrol(),
@@ -278,12 +273,12 @@ _page1(con) => Center(
                                   color: value
                                       .fontRenkKontrol()), //Consumer<WeatherFetch>(builder: (context, value, child) => FaIcon(FontAwesomeIcons.water,color: value.renkKontrol())),
                               title: Text("Nem",
-                                  style: GoogleFonts.notoSans(
+                                  style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontSize: 18,
                                           color: value.fontRenkKontrol()))),
                               trailing: Text("% ${value.nem}",
-                                  style: GoogleFonts.notoSans(
+                                  style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontSize: 18,
                                           color: value
@@ -294,13 +289,13 @@ _page1(con) => Center(
                                   color: value
                                       .fontRenkKontrol()), //Consumer<WeatherFetch>(builder: (context, value, child) => FaIcon(FontAwesomeIcons.temperatureHigh,color: value.renkKontrol())),
                               title: Text("Hissedilen",
-                                  style: GoogleFonts.notoSans(
+                                  style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontSize: 18,
                                           color: value.fontRenkKontrol()))),
                               trailing: Text(
                                   "${value.hissedilen?.toInt()} \u2103",
-                                  style: GoogleFonts.notoSans(
+                                  style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontSize: 18,
                                           color: value
@@ -311,12 +306,12 @@ _page1(con) => Center(
                                   color: value
                                       .fontRenkKontrol()), //Consumer<WeatherFetch>(builder: (context, value, child) => FaIcon(FontAwesomeIcons.wind,color: value.renkKontrol())),
                               title: Text("Rüzgar",
-                                  style: GoogleFonts.notoSans(
+                                  style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontSize: 18,
                                           color: value.fontRenkKontrol()))),
                               trailing: Text("${value.ruzgar?.toInt()} km/s",
-                                  style: GoogleFonts.notoSans(
+                                  style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontSize: 18,
                                           color: value
@@ -335,126 +330,174 @@ _page1(con) => Center(
       ),
     );
 
-_page2(con) => Center(
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container //Grafik Tablosu
-                (
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              height: MediaQuery.of(con).size.height * 0.5,
-              width: MediaQuery.of(con).size.width,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text("Günün Tahminleri",
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    fontSize: 20, color: Colors.white))),
-                      ),
-                    ],
-                  ),
-                  Container(
+_page2(con) {
+  final prov = Provider.of<WeatherFetch>(con);
+
+  String time(int stamp) {
+    var date = DateTime.fromMillisecondsSinceEpoch(stamp * 1000);
+    if (date.hour < 10) {
+      return "0${date.hour}:00";
+    } else
+      return "${date.hour}:00";
+  }
+
+  return Center(
+    child: SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container //Grafik Tablosu
+              (
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            height: MediaQuery.of(con).size.height * 0.5,
+            width: MediaQuery.of(con).size.width,
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+                color: Colors.black12, borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  children: [
+                    Text("Günün Tahminleri",
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600))),
+                    Spacer(),
+                    CupertinoSwitch(
+                      activeColor: Colors.white,
+                      value: false,
+                      onChanged: (value) {},
+                    )
+                  ],
+                ),
+                Container(
                     height: MediaQuery.of(con).size.height * 0.4,
-                    child: Consumer<WeatherFetch>(
-                      builder: (context, value, child) => SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 10, top: 10),
-                          width: 1000,
-                          child: FLChart(
-                              spots: value.spots,
-                              y: value.y,
-                              timeList: value.data),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container //7 Günlük Tahminler
-                (
-              height: MediaQuery.of(con).size.height * 0.25,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Consumer<WeatherFetch>(
-                builder: (context, value, child) => FutureBuilder<DailyList>(
-                  future: value.foreFuture,
-                  builder: (context, snap) {
-                    if (snap.hasData) {
-                      var list = snap.data!.dayTemps;
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 7,
-                        itemBuilder: (con, i) {
-                          if (i == 0) return Center();
-                          return Container(
-                            width: MediaQuery.of(con).size.width * 0.25,
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            decoration: BoxDecoration(
-                                color: value.panelRenkKontrol(),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                    child: ListView.separated(
+                      itemCount: 24,
+                      itemBuilder: (context, index) {
+                        if (index == 0) return Center();
+                        return SizedBox(
+                          height: 48,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    DateFormat.EEEE().format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            list[i].time * 1000)),
-                                    style: GoogleFonts.rubik(
-                                        textStyle: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: value.fontRenkKontrol()))),
-                                Divider(
-                                    color: value.fontRenkKontrol(),
-                                    thickness: 0.2,
-                                    indent: 20,
-                                    endIndent: 20,
-                                    height: 20),
-                                SizedBox(
-                                  height: MediaQuery.of(con).size.height * 0.1,
-                                  child: IconImageKontrol()
-                                      .iconKontrol(list[i].icon),
+                                  time(prov.data[index].time),
+                                  style: Styles().bottomSheetText1,
                                 ),
-                                Divider(
-                                    color: value.fontRenkKontrol(),
-                                    thickness: 0.2,
-                                    indent: 20,
-                                    endIndent: 20,
-                                    height: 20),
-                                Text(
-                                    "${list[i].day.toInt()}\u00b0 / ${list[i].night.toInt()}\u00b0",
-                                    style: GoogleFonts.rubik(
-                                        textStyle: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: value.fontRenkKontrol())))
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    return const Center(
-                        child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ));
-                  },
-                ),
+                                Row(children: [
+                                  Text("29"),
+                                  SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: DataControl().iconKontrol(prov.data[index].icon)),
+                                ]),
+                                Text("Güneşli")
+                              ]),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index)
+                      {
+                        if (index == 0) return Center();
+
+                        return Divider(color: Colors.white24,);
+                      },
+                    )
+                    //Consumer<WeatherFetch>
+                    //(
+                    //  builder: (context, value, child) => SingleChildScrollView(
+                    //    scrollDirection: Axis.horizontal,
+                    //    child: Container
+                    //    (
+                    //      padding: const EdgeInsets.only(
+                    //          left: 20, right: 20, bottom: 10, top: 10),
+                    //      width: 1000,
+                    //      child: FLChart(
+                    //          spots: value.spots,
+                    //          y: value.y,
+                    //          timeList: value.data),
+                    //    ),
+                    //  ),
+                    //),
+                    ),
+              ],
+            ),
+          ),
+          Container //7 Günlük Tahminler
+            (
+            height: MediaQuery.of(con).size.height * 0.25,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Consumer<WeatherFetch>(
+              builder: (context, value, child) => FutureBuilder<DailyList>(
+                future: value.foreFuture,
+                builder: (context, snap) {
+                  if (snap.hasData) {
+                    var list = snap.data!.dayTemps;
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 7,
+                      itemBuilder: (con, i) {
+                        if (i == 0) return Center();
+                        return Container(
+                          width: MediaQuery.of(con).size.width * 0.25,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                              color: value.panelRenkKontrol(),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                  DateFormat.EEEE().format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          list[i].time * 1000)),
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: value.fontRenkKontrol()))),
+                              Divider(
+                                  color: value.fontRenkKontrol(),
+                                  thickness: 0.2,
+                                  indent: 20,
+                                  endIndent: 20,
+                                  height: 20),
+                              SizedBox(
+                                height: MediaQuery.of(con).size.height * 0.1,
+                                child: DataControl().iconKontrol(list[i].icon),
+                              ),
+                              Divider(
+                                  color: value.fontRenkKontrol(),
+                                  thickness: 0.2,
+                                  indent: 20,
+                                  endIndent: 20,
+                                  height: 20),
+                              Text(
+                                  "${list[i].day.toInt()}\u00b0 / ${list[i].night.toInt()}\u00b0",
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: value.fontRenkKontrol())))
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ));
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ),
+  );
+}

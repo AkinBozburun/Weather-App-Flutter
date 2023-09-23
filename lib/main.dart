@@ -36,10 +36,45 @@ class MyApp extends StatelessWidget {
         title: 'My Weather',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          useMaterial3: true,
           primarySwatch: Colors.blue,
         ),
-        home: WeatherPage(),
+        home: BootPage(),
       ),
     );
   }
+}
+
+class BootPage extends StatefulWidget
+{
+  const BootPage({Key? key}) : super(key: key);
+
+  @override
+  State<BootPage> createState() => _BootPageState();
+}
+
+class _BootPageState extends State<BootPage>
+{
+  _booting()
+  {
+    final provider = Provider.of<WeatherFetch>(context);
+
+    if (provider.data == [])
+    {
+      return Scaffold
+      (
+        backgroundColor: Color(0xff44B0FF),
+        body: Center
+        (
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else
+    {
+      return WeatherPage();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => _booting();
 }

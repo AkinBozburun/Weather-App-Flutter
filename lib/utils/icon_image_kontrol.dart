@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class IconImageKontrol
+class DataControl
 {
   iconKontrol(gelenIcon)
   {
@@ -158,7 +158,7 @@ class IconImageKontrol
           ]
         ),
       );
-      default: return CircularProgressIndicator();
+      default: return Center();
     }
   }
 

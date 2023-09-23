@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_weather_app/models/json.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
+import 'package:my_weather_app/utils/styles.dart';
 
 class WeatherFetch extends ChangeNotifier {
   Future<void> sehirSil(i) async {
@@ -48,7 +49,7 @@ class WeatherFetch extends ChangeNotifier {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2,
-        backgroundColor: Colors.black38,
+        backgroundColor: Colors.black,
       );
     }
     if (izin == LocationPermission.deniedForever) {
@@ -115,9 +116,9 @@ class WeatherFetch extends ChangeNotifier {
 
   fontRenkKontrol() {
     if (icon == "13d" || icon == "13n") {
-      return Colors.black;
+      return Styles.blackColor;
     } else {
-      return Colors.white;
+      return Styles.whiteColor;
     }
   }
 
@@ -125,7 +126,7 @@ class WeatherFetch extends ChangeNotifier {
     if (icon == "13d" || icon == "13n") {
       return Colors.black12;
     } else {
-      return Colors.white12;
+      return Colors.white10;
     }
   }
 
