@@ -10,8 +10,8 @@ class DataControl
       case "01n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/sunny.png"),
         decoration:
         BoxDecoration
@@ -28,8 +28,8 @@ class DataControl
       case "02n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/sun cloud.png"),
         decoration: BoxDecoration
         (
@@ -45,8 +45,8 @@ class DataControl
       case "03n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/cloudy.png"),
         decoration: BoxDecoration
         (
@@ -62,8 +62,8 @@ class DataControl
       case "04n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/broken clouds.png"),
         decoration: BoxDecoration
         (
@@ -79,8 +79,8 @@ class DataControl
       case "09n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/shower rain.png"),
         decoration: BoxDecoration
         (
@@ -96,8 +96,8 @@ class DataControl
       case "10n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/sun-shower.png"),
         decoration: BoxDecoration
         (
@@ -113,8 +113,8 @@ class DataControl
       case "11n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/storm.png"),
         decoration: BoxDecoration
         (
@@ -130,8 +130,8 @@ class DataControl
       case "13n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/snow.png"),
         decoration: BoxDecoration
         (
@@ -147,8 +147,8 @@ class DataControl
       case "50n" :
       return Container
       (
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         child: Image.asset("images icons/fog.png"),
         decoration: BoxDecoration
         (

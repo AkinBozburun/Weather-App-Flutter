@@ -112,111 +112,114 @@ _appbar() => AppBar(
       ),
     );
 
-_drawer(con) => Drawer(
-    backgroundColor: Colors.blueGrey.shade400,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(children: [
-                  Text("Geçmiş Listesi", style: Styles().bottomSheetText1),
-                  SizedBox(width: 5),
-                  FaIcon(
-                    FontAwesomeIcons.history,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ]),
-              ),
-              Container //Geçmiş şehirler listesi kutusu
-                  (
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                height: 300,
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.circular(20),
+_drawer(con) => Drawer
+(
+  backgroundColor: Colors.blueGrey.shade400,
+  child: Column
+  (
+    mainAxisAlignment: MainAxisAlignment.center,
+    children:
+    [
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(children: [
+                Text("Geçmiş Listesi", style: Styles().bottomSheetText1),
+                SizedBox(width: 5),
+                FaIcon(
+                  FontAwesomeIcons.history,
+                  color: Colors.white,
+                  size: 20,
                 ),
-                child: Consumer<WeatherFetch>(
-                  builder: (context, value, child) =>
-                      FutureBuilder<List<SehirlerList>>(
-                    future: SehirlerDAO().sehirOku(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var sehirListSnap = snapshot.data;
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: sehirListSnap!.length,
-                            itemBuilder: (context, index) {
-                              var sehir = sehirListSnap[index];
-                              return ListTile(
-                                onTap: () {
-                                  value.spots = [];
-                                  value.api(sehir.sehirAd, sehir.ulkeAd,
-                                      sehir.lat, sehir.long);
-                                  Navigator.pop(context);
-                                },
-                                title: Text(sehir.sehirAd,
-                                    style: Styles().bottomSheetText1),
-                                trailing: IconButton(
-                                    onPressed: () //şehir Silme Butonu
-                                        {
-                                      value.sehirSil(sehir.sehirID);
-                                    },
-                                    icon: FaIcon(FontAwesomeIcons.times)),
-                              );
-                            });
-                      } else {
-                        return Center();
-                      }
-                    },
-                  ),
+              ]),
+            ),
+            Container //Geçmiş şehirler listesi kutusu
+                (
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              height: 300,
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Consumer<WeatherFetch>(
+                builder: (context, value, child) =>
+                    FutureBuilder<List<SehirlerList>>(
+                  future: SehirlerDAO().sehirOku(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var sehirListSnap = snapshot.data;
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: sehirListSnap!.length,
+                          itemBuilder: (context, index) {
+                            var sehir = sehirListSnap[index];
+                            return ListTile(
+                              onTap: () {
+                                value.spots = [];
+                                value.api(sehir.sehirAd, sehir.ulkeAd,
+                                    sehir.lat, sehir.long);
+                                Navigator.pop(context);
+                              },
+                              title: Text(sehir.sehirAd,
+                                  style: Styles().bottomSheetText1),
+                              trailing: IconButton(
+                                  onPressed: () //şehir Silme Butonu
+                                      {
+                                    value.sehirSil(sehir.sehirID);
+                                  },
+                                  icon: FaIcon(FontAwesomeIcons.times)),
+                            );
+                          });
+                    } else {
+                      return Center();
+                    }
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        SizedBox(height: 80),
-        GestureDetector //Şehir arama butonu
-            (
-          onTap: () => Navigator.push(
-              con, MaterialPageRoute(builder: (context) => CityList())),
-          child: Container(
-            alignment: Alignment.center,
-            height: 40,
-            margin: const EdgeInsets.symmetric(horizontal: 60),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Text("Şehir Ara", style: Styles().bottomSheetText2),
-          ),
+      ),
+      SizedBox(height: 80),
+      GestureDetector //Şehir arama butonu
+          (
+        onTap: () => Navigator.push(
+            con, MaterialPageRoute(builder: (context) => CityList())),
+        child: Container(
+          alignment: Alignment.center,
+          height: 40,
+          margin: const EdgeInsets.symmetric(horizontal: 60),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          child: Text("Şehir Ara", style: Styles().bottomSheetText2),
         ),
-        SizedBox(height: 15),
-        Consumer<WeatherFetch> //Konum butonu
-            (
-          builder: (context, value, child) => SizedBox(
-            width: 200,
-            child: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  value.izinKontrol();
-                },
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  FaIcon(FontAwesomeIcons.searchLocation,
-                      size: 20, color: Colors.white),
-                  SizedBox(width: 5),
-                  Text("Konumdan Bul", style: Styles().bottomSheetText1),
-                ])),
-          ),
+      ),
+      SizedBox(height: 15),
+      Consumer<WeatherFetch> //Konum butonu
+          (
+        builder: (context, value, child) => SizedBox(
+          width: 200,
+          child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                value.izinKontrol();
+              },
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                FaIcon(FontAwesomeIcons.searchLocation,
+                    size: 20, color: Colors.white),
+                SizedBox(width: 5),
+                Text("Konumdan Bul", style: Styles().bottomSheetText1),
+              ])),
         ),
-      ],
-    ));
+      ),
+    ],
+  ));
 
 _page1(con) => Center(
       child: SingleChildScrollView(
@@ -230,16 +233,18 @@ _page1(con) => Center(
             ),
             SizedBox(height: 50),
             Consumer<WeatherFetch> //Hava Durumu Detay
+              (
+                builder: (context, value, child) => Container
                 (
-              builder: (context, value, child) => Container(
                 padding: const EdgeInsets.all(20),
-                height: MediaQuery.of(con).size.height * 0.5,
+                height: MediaQuery.of(con).size.height * 0.45,
                 width: MediaQuery.of(con).size.width * 0.9,
-                decoration: BoxDecoration(
-                    color: value.panelRenkKontrol(),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white30)),
-                child: Column(
+                decoration: BoxDecoration
+                (
+                  color: value.panelRenkKontrol(),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white30)),
+                  child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
@@ -330,10 +335,12 @@ _page1(con) => Center(
       ),
     );
 
-_page2(con) {
+_page2(con)
+{
   final prov = Provider.of<WeatherFetch>(con);
 
-  String time(int stamp) {
+  String time(int stamp)
+  {
     var date = DateTime.fromMillisecondsSinceEpoch(stamp * 1000);
     if (date.hour < 10) {
       return "0${date.hour}:00";
@@ -390,19 +397,23 @@ _page2(con) {
                                   time(prov.hourlyData[index].time),
                                   style: Styles().dailyForecastText,
                                 ),
-                                Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText),
                                 Row(children:
                                 [
                                   Text(prov.hourlyData[index].temp.toInt().toString()+"°",
                                   style: Styles().dailyForecastText),
                                   SizedBox(width: 8),
-                                  SizedBox
+                                  SizedBox //Icon
                                   (
-                                    height: 36,
-                                    width: 36,
+                                    height: 42,
+                                    width: 42,
                                     child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
-                                  ),
+                                  ),                                  
                                 ]),
+                                SizedBox
+                                (
+                                  width: 80,
+                                  child: Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText,textAlign: TextAlign.end,)
+                                ),                                
                               ]),
                         );
                       },
