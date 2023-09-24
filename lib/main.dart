@@ -59,7 +59,7 @@ class _BootPageState extends State<BootPage>
   {
     final provider = Provider.of<WeatherFetch>(context);
 
-    if (provider.data == [])
+    if (provider.hourlyData == [])
     {
       return Scaffold
       (

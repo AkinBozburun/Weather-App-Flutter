@@ -15,7 +15,7 @@ class WeatherFetch extends ChangeNotifier {
     print("silindi");
   }
 
-  List<Hourly> data = [];
+  List<Hourly> hourlyData = [];
 
   List<FlSpot> spots = [];
 
@@ -139,11 +139,12 @@ class WeatherFetch extends ChangeNotifier {
     return foreTemps;
   }
 
-  _forecastDataYakala(jsonTemp) //Grafik
+  _forecastDataYakala(jsonTemp) //Günlük tahminler Grafik ve Tablo
   {
-    data = jsonTemp.hourTemps;
-    for (int i = 0; i < 24; i++) {
-      y = data[i].temp.toDouble();
+    hourlyData = jsonTemp.hourTemps;
+    for (int i = 0; i < 24; i++)
+    {
+      y = hourlyData[i].temp.toDouble();
       spots.add(FlSpot(i.toDouble(), y));
       i++;
     }

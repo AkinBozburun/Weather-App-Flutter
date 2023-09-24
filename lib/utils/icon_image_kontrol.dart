@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DataControl
 {
-  iconKontrol(gelenIcon)
+  iconKontrol(gelenIcon,shadowOk)
   {
     switch(gelenIcon)
     {
@@ -13,12 +13,13 @@ class DataControl
         width: 150,
         height: 150,
         child: Image.asset("images icons/sunny.png"),
-        decoration: BoxDecoration
+        decoration:
+        BoxDecoration
         (
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.amber.shade300,blurRadius: 70),
+            BoxShadow(color: shadowOk == false ? Colors.transparent : Colors.amber.shade300 ,blurRadius: 70),
           ]
         ),
       );
@@ -35,7 +36,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.yellow.shade50,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.yellow.shade50,blurRadius: 100),
           ]
         ),
       );
@@ -52,7 +53,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.grey.shade300,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.grey.shade300,blurRadius: 100),
           ]
         ),
       );
@@ -69,7 +70,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.white60,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white60,blurRadius: 100),
           ]
         ),
       );
@@ -86,7 +87,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.blueGrey.shade600,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.blueGrey.shade600,blurRadius: 100),
           ]
         ),
       );
@@ -103,7 +104,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.black26,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.black26,blurRadius: 100),
           ]
         ),
       );
@@ -120,7 +121,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.yellow.shade100,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.yellow.shade100,blurRadius: 100),
           ]
         ),
       );
@@ -137,7 +138,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.white,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white,blurRadius: 100),
           ]
         ),
       );
@@ -154,7 +155,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: Colors.white,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white,blurRadius: 100),
           ]
         ),
       );

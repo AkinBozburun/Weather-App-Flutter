@@ -226,7 +226,7 @@ _page1(con) => Center(
             Consumer<WeatherFetch> //Hava Durumu Icon
                 (
               builder: (context, value, child) =>
-                  DataControl().iconKontrol(value.icon),
+                  DataControl().iconKontrol(value.icon,true),
             ),
             SizedBox(height: 50),
             Consumer<WeatherFetch> //Hava Durumu Detay
@@ -380,22 +380,29 @@ _page2(con) {
                       itemBuilder: (context, index) {
                         if (index == 0) return Center();
                         return SizedBox(
-                          height: 48,
+                          height: 64,
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  time(prov.data[index].time),
-                                  style: Styles().bottomSheetText1,
+                              children:
+                              [
+                                Text
+                                (
+                                  time(prov.hourlyData[index].time),
+                                  style: Styles().dailyForecastText,
                                 ),
-                                Row(children: [
-                                  Text("29"),
-                                  SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: DataControl().iconKontrol(prov.data[index].icon)),
+                                Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText),
+                                Row(children:
+                                [
+                                  Text(prov.hourlyData[index].temp.toInt().toString()+"°",
+                                  style: Styles().dailyForecastText),
+                                  SizedBox(width: 8),
+                                  SizedBox
+                                  (
+                                    height: 36,
+                                    width: 36,
+                                    child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
+                                  ),
                                 ]),
-                                Text("Güneşli")
                               ]),
                         );
                       },
@@ -467,7 +474,7 @@ _page2(con) {
                                   height: 20),
                               SizedBox(
                                 height: MediaQuery.of(con).size.height * 0.1,
-                                child: DataControl().iconKontrol(list[i].icon),
+                                child: DataControl().iconKontrol(list[i].icon,false),
                               ),
                               Divider(
                                   color: value.fontRenkKontrol(),
