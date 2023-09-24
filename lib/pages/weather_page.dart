@@ -49,7 +49,7 @@ class _WeatherPageState extends State<WeatherPage>
   Widget build(BuildContext context) => Scaffold
   (
     backgroundColor: Colors.blue.shade300,
-    appBar: _appbar(),
+    appBar: _appbar(context),
     body: Center
     (
       child: Stack
@@ -80,47 +80,49 @@ class _WeatherPageState extends State<WeatherPage>
   );
 }
 
-_appbar() => AppBar
-(
-      toolbarHeight: 80,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      actions: [
-        Consumer<WeatherFetch>(
-            builder: (context, value, child) => Container(
-                  padding: const EdgeInsets.only(top: 10, right: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(value.sehirText.toString(),
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600,
-                                  color: value.fontRenkKontrol()))),
-                      Text(value.ulkeText.toString(),
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: value.fontRenkKontrol()))),
-                    ],
-                  ),
-                )),
-      ],
-      leading: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Builder(
-          builder: (context) => IconButton(
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              icon: Consumer<WeatherFetch>(
-                builder: (context, value, child) => FaIcon(
-                    FontAwesomeIcons.bars,
-                    color: value.fontRenkKontrol()),
-              )),
-        ),
+_appbar(con)
+{
+  final prov = Provider.of<WeatherFetch>(con);
+
+  return AppBar
+  (
+
+    toolbarHeight: 80,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    actions:
+    [
+      Container
+      (
+        padding: const EdgeInsets.only(top: 10, right: 15),
+        child: Column
+        (
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:
+          [
+            Text(prov.sehirText.toString(),
+                style: GoogleFonts.inter(textStyle: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: prov.fontRenkKontrol()))),
+            Text(prov.ulkeText.toString(),
+                style: GoogleFonts.inter(textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: prov.fontRenkKontrol()))),
+        ],
+      )),
+    ],
+    leading: Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Builder(
+        builder: (context) => IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: FaIcon(FontAwesomeIcons.bars, color: prov.fontRenkKontrol())),
       ),
-    );
+    ),
+  );
+}
 
 _drawer(con) => Drawer
 (
@@ -350,26 +352,23 @@ _page1(con) => Center
     );
 
 
-_switchButton(switchIcon, tap)
-{
-  return InkWell
+_switchButton(switchIcon, tap) => InkWell
+(
+  onTap: tap,
+  child: Container
   (
-    onTap: tap,
-    child: Container
+    width: 42,
+    height: 36,
+    child: switchIcon == true ? Image.asset("images icons/chart_icon.png") :
+    Image.asset("images icons/list_icon.png"),      
+    padding: const EdgeInsets.all(4),
+    decoration: BoxDecoration
     (
-      width: 42,
-      height: 36,
-      child: switchIcon == true ? Image.asset("images icons/chart_icon.png") :
-      Image.asset("images icons/list_icon.png"),      
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration
-      (
-        color:Colors.black12,
-        borderRadius: BorderRadius.circular(10),
-      ),
+      color:Colors.black12,
+      borderRadius: BorderRadius.circular(10),
     ),
-  );
-}
+  ),
+);
 
 _chartOrList(switchIcon,con)
 {
