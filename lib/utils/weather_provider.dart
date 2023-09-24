@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_weather_app/models/json.dart';
+import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/styles.dart';
 

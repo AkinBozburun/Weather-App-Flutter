@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_weather_app/models/json.dart';
+import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/pages/city_list_search.dart';
 import 'package:my_weather_app/utils/sehir_db.dart';
 import 'package:my_weather_app/utils/db_dao.dart';

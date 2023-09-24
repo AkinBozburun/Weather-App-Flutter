@@ -7,9 +7,15 @@ class Daily
 
   Daily(this.time, this.day, this.night, this.icon);
 
-  factory Daily.fromjson(Map<String, dynamic> json) {
-    return Daily(json["dt"], json["temp"]["day"], json["temp"]["night"],
-        json["weather"][0]["icon"]);
+  factory Daily.fromjson(Map<String, dynamic> json)
+  {
+    return Daily
+    (
+      json["dt"],
+      json["temp"]["day"],
+      json["temp"]["night"],
+      json["weather"][0]["icon"]
+    );
   }
 }
 

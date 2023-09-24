@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_weather_app/models/json.dart';
+import 'package:my_weather_app/models/weather_model.dart';
 
 class FLChart extends StatelessWidget {
   final List<FlSpot> spots;
