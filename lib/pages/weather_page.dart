@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -351,28 +350,28 @@ _page1(con) => Center
     );
 
 
-_switchButton()
+_switchButton(switchIcon, tap)
 {
   return InkWell
   (
-    onTap: () => print("tıklandı"),
+    onTap: tap,
     child: Container
     (
-      width: 36,
+      width: 42,
       height: 36,
-      child: Image.asset("images icons/list_icon.png"),
-      padding: const EdgeInsets.all(6),
+      child: switchIcon == true ? Image.asset("images icons/chart_icon.png") :
+      Image.asset("images icons/list_icon.png"),      
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration
       (
-        color: Colors.black12,
-        border: Border.all(color: Styles.whiteColor),
-        borderRadius: BorderRadius.circular(10)
+        color:Colors.black12,
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
   );
 }
 
-_page2(con)
+_chartOrList(switchIcon,con)
 {
   final prov = Provider.of<WeatherFetch>(con);
 
@@ -386,6 +385,74 @@ _page2(con)
     else return "${date.hour}:00";
   }
 
+  if(switchIcon == true)
+  {
+    return SingleChildScrollView //chart
+    (
+      scrollDirection: Axis.horizontal,
+      child: Container
+      (
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
+        width: 1000,
+        child: FLChart
+        (
+          spots: prov.spots,
+          y: prov.y,
+          timeList: prov.hourlyData
+        ),
+      ),
+    );
+  }
+  else
+  { 
+    return ListView.separated //list
+    (
+      itemCount: 24,
+      itemBuilder: (context, index)
+      {        
+        return SizedBox
+        (
+          height: 64,
+          child: Row
+          (
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children:
+            [
+              Text
+              (
+                time(prov.hourlyData[index].time),
+                style: Styles().dailyForecastText,
+              ),
+              Row(children:
+              [
+                Text(prov.hourlyData[index].temp.toInt().toString()+"°",
+                style: Styles().dailyForecastText),
+                SizedBox(width: 8),
+                SizedBox //Icon
+                (
+                  height: 42,
+                  width: 42,
+                  child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
+                ),                                  
+              ]),
+              SizedBox
+              (
+                width: 80,
+                child: Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText,textAlign: TextAlign.end,)
+              ),
+            ]
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.white24),
+    );
+  }
+}
+
+_page2(con)
+{
+  final prov = Provider.of<WeatherFetch>(con);
+
   return Center
   (
     child: SafeArea
@@ -395,7 +462,7 @@ _page2(con)
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children:
         [
-          Container //Grafik Tablosu
+          Container
           (
             padding: const EdgeInsets.symmetric(horizontal: 16),
             height: MediaQuery.of(con).size.height * 0.5,
@@ -410,86 +477,25 @@ _page2(con)
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children:
               [
-                Row(
+                Row
+                (
                   children:
                   [
-                    Text("Günün Tahminleri", style: GoogleFonts.inter(
-                      textStyle: TextStyle
-                      (
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600
-                      ))),
+                    Text("Günün Tahminleri", style: GoogleFonts.inter(textStyle: TextStyle
+                    (
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600
+                    ))),
                     Spacer(),
-                    _switchButton(),
+                    _switchButton(prov.switchIcon,()=> prov.switchIconChange()),
                   ],
                 ),
-                Container
+                Container //Grafik ve Liste Penceresi
                 (
                   height: MediaQuery.of(con).size.height * 0.4,
-                  child: ListView.separated
-                  (
-                    itemCount: 24,
-                    itemBuilder: (context, index)
-                    {
-                      if (index == 0) return Center();
-                      return SizedBox(
-                        height: 64,
-                        child: Row
-                        (
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:
-                          [
-                            Text
-                            (
-                              time(prov.hourlyData[index].time),
-                              style: Styles().dailyForecastText,
-                            ),
-                            Row(children:
-                            [
-                              Text(prov.hourlyData[index].temp.toInt().toString()+"°",
-                              style: Styles().dailyForecastText),
-                              SizedBox(width: 8),
-                              SizedBox //Icon
-                              (
-                                height: 42,
-                                width: 42,
-                                child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
-                              ),                                  
-                            ]),
-                            SizedBox
-                            (
-                              width: 80,
-                              child: Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText,textAlign: TextAlign.end,)
-                            ),
-                          ]
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index)
-                    {
-                      if (index == 0) return Center();
-
-                      return Divider(color: Colors.white24,);
-                    },
-                  )
-                    //Consumer<WeatherFetch>
-                    //(
-                    //  builder: (context, value, child) => SingleChildScrollView(
-                    //    scrollDirection: Axis.horizontal,
-                    //    child: Container
-                    //    (
-                    //      padding: const EdgeInsets.only(
-                    //          left: 20, right: 20, bottom: 10, top: 10),
-                    //      width: 1000,
-                    //      child: FLChart(
-                    //          spots: value.spots,
-                    //          y: value.y,
-                    //          timeList: value.data),
-                    //    ),
-                    //  ),
-                    //),
-                  ),
+                  child: _chartOrList(prov.switchIcon, con),
+                ),
               ],
             ),
           ),

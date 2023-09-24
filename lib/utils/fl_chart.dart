@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_weather_app/models/weather_model.dart';
+import 'package:my_weather_app/utils/styles.dart';
 
 class FLChart extends StatelessWidget {
   final List<FlSpot> spots;
@@ -64,8 +65,7 @@ class FLChart extends StatelessWidget {
   getTitleData() => FlTitlesData(
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (context, value) => const TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          getTextStyles: (context, value) => Styles().dailyForecastText,
           getTitles: (value) {
             for (int i = 0; i < 24; i++) {
               if (value == i)

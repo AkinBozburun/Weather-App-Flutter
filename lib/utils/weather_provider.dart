@@ -139,6 +139,14 @@ class WeatherFetch extends ChangeNotifier {
     return foreTemps;
   }
 
+  bool switchIcon = true;
+
+  switchIconChange()
+  {
+    switchIcon = !switchIcon;
+    notifyListeners();
+  }
+
   _forecastDataYakala(jsonTemp) //Günlük tahminler Grafik ve Tablo
   {
     hourlyData = jsonTemp.hourTemps;
