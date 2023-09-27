@@ -126,7 +126,7 @@ _appbar(con)
 
 _drawer(con) => Drawer
 (
-  backgroundColor: Colors.blueGrey.shade400,
+  backgroundColor: Color(0xFF78909C),
   child: Column
   (
     mainAxisAlignment: MainAxisAlignment.center,
@@ -143,11 +143,7 @@ _drawer(con) => Drawer
               child: Row(children: [
                 Text("Geçmiş Listesi", style: Styles().bottomSheetText1),
                 SizedBox(width: 5),
-                FaIcon(
-                  FontAwesomeIcons.history,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                FaIcon(FontAwesomeIcons.history, color: Colors.white, size: 20),
               ]),
             ),
             Container //Geçmiş şehirler listesi kutusu
@@ -179,12 +175,14 @@ _drawer(con) => Drawer
                               },
                               title: Text(sehir.sehirAd,
                                   style: Styles().bottomSheetText1),
-                              trailing: IconButton(
-                                  onPressed: () //şehir Silme Butonu
-                                      {
-                                    value.sehirSil(sehir.sehirID);
-                                  },
-                                  icon: FaIcon(FontAwesomeIcons.times)),
+                              trailing: IconButton
+                              (
+                                onPressed: () //şehir Silme Butonu
+                                {
+                                  value.sehirSil(sehir.sehirID);
+                                },
+                                icon: FaIcon(FontAwesomeIcons.times)
+                              ),
                             );
                           });
                     } else {
@@ -235,121 +233,122 @@ _drawer(con) => Drawer
 
 _page1(con) => Center
 (
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-          [
-            Consumer<WeatherFetch> //Hava Durumu Icon
+  child: SingleChildScrollView
+  (
+    child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+        [
+          Consumer<WeatherFetch> //Hava Durumu Icon
+          (
+            builder: (context, value, child) =>
+            DataControl().iconKontrol(value.icon,true),
+          ),
+          SizedBox(height: 50),
+          Consumer<WeatherFetch> //Hava Durumu Detay
+          (
+            builder: (context, value, child) => Container
             (
-              builder: (context, value, child) =>
-              DataControl().iconKontrol(value.icon,true),
-            ),
-            SizedBox(height: 50),
-            Consumer<WeatherFetch> //Hava Durumu Detay
+            padding: const EdgeInsets.all(20),
+            height: MediaQuery.of(con).size.height * 0.45,
+            width: MediaQuery.of(con).size.width * 0.9,
+            decoration: BoxDecoration
             (
-              builder: (context, value, child) => Container
-              (
-              padding: const EdgeInsets.all(20),
-              height: MediaQuery.of(con).size.height * 0.45,
-              width: MediaQuery.of(con).size.width * 0.9,
-              decoration: BoxDecoration
-              (
-                color: value.panelRenkKontrol(),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white30)),
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:
-                [
-                  Column
-                  (
-                    children:
-                    [
-                      Text(value.aciklama.toString(),
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w600,
-                                  color: value.fontRenkKontrol()))),
-                      Text("${value.derece?.toInt()} \u2103",
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 50,
-                                  color: value.fontRenkKontrol(),
-                                  fontWeight: FontWeight.bold))),
-                      Divider(
-                          color: value.fontRenkKontrol(),
-                          thickness: 0.7,
-                          indent: 30,
-                          endIndent: 30)
-                    ],
-                  ),
-                  SizedBox(
-                    width: 280,
-                    child: Consumer<WeatherFetch>(
-                      builder: (context, value, child) => Column(
-                        children: [
-                          ListTile(
-                            leading: FaIcon(FontAwesomeIcons.water,
-                                color: value
-                                    .fontRenkKontrol()), //Consumer<WeatherFetch>(builder: (context, value, child) => FaIcon(FontAwesomeIcons.water,color: value.renkKontrol())),
-                            title: Text("Nem",
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        color: value.fontRenkKontrol()))),
-                            trailing: Text("% ${value.nem}",
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        color: value
-                                            .fontRenkKontrol()))), //Consumer<WeatherFetch>(builder: (context, value, child) => Text("% ${value.nem}",style: Fonts().detail))
-                          ),
-                          ListTile(
-                            leading: FaIcon(FontAwesomeIcons.temperatureHigh,
-                                color: value
-                                    .fontRenkKontrol()), //Consumer<WeatherFetch>(builder: (context, value, child) => FaIcon(FontAwesomeIcons.temperatureHigh,color: value.renkKontrol())),
-                            title: Text("Hissedilen",
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        color: value.fontRenkKontrol()))),
-                            trailing: Text(
-                                "${value.hissedilen?.toInt()} \u2103",
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        color: value
-                                            .fontRenkKontrol()))), //Consumer<WeatherFetch>(builder: (context, value, child) => Text("${value.hissedilen.toInt()} \u2103",style: Fonts().detail))
-                          ),
-                          ListTile(
-                            leading: FaIcon(FontAwesomeIcons.wind,
-                                color: value
-                                    .fontRenkKontrol()), //Consumer<WeatherFetch>(builder: (context, value, child) => FaIcon(FontAwesomeIcons.wind,color: value.renkKontrol())),
-                            title: Text("Rüzgar",
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        color: value.fontRenkKontrol()))),
-                            trailing: Text("${value.ruzgar?.toInt()} km/s",
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 18,
-                                        color: value
-                                            .fontRenkKontrol()))), //Consumer<WeatherFetch>(builder: (context, value, child) => Text("${value.ruzgar.toInt()} km/s",style: Fonts().detail))
-                          ),
-                        ],
-                      ),
+              color: value.panelRenkKontrol(),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white30)),
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:
+              [
+                Column
+                (
+                  children:
+                  [
+                    Text(value.aciklama.toString(),
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                color: value.fontRenkKontrol()))),
+                    Text("${value.derece?.toInt()} \u2103",
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                fontSize: 50,
+                                color: value.fontRenkKontrol(),
+                                fontWeight: FontWeight.bold))),
+                    Divider(
+                        color: value.fontRenkKontrol(),
+                        thickness: 0.7,
+                        indent: 30,
+                        endIndent: 30)
+                  ],
+                ),
+                SizedBox(
+                  width: 280,
+                  child: Consumer<WeatherFetch>(
+                    builder: (context, value, child) => Column(
+                      children: [
+                        ListTile(
+                          leading: FaIcon(FontAwesomeIcons.water,
+                              color: value
+                                  .fontRenkKontrol()), 
+                          title: Text("Nem",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: value.fontRenkKontrol()))),
+                          trailing: Text("% ${value.nem}",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: value
+                                          .fontRenkKontrol()))),
+                        ),
+                        ListTile(
+                          leading: FaIcon(FontAwesomeIcons.temperatureHigh,
+                              color: value
+                                  .fontRenkKontrol()),
+                          title: Text("Hissedilen",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: value.fontRenkKontrol()))),
+                          trailing: Text(
+                              "${value.hissedilen?.toInt()} \u2103",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: value
+                                          .fontRenkKontrol()))),
+                        ),
+                        ListTile(
+                          leading: FaIcon(FontAwesomeIcons.wind,
+                              color: value
+                                  .fontRenkKontrol()),
+                          title: Text("Rüzgar",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: value.fontRenkKontrol()))),
+                          trailing: Text("${value.ruzgar?.toInt()} km/s",
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: value
+                                          .fontRenkKontrol()))),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              )),
-            ),
-          ],
-        ),
+                ),
+              ],
+            )),
+          ),
+        ],
       ),
-    );
+    ),
+  );
 
 
 _switchButton(switchIcon, tap) => InkWell
