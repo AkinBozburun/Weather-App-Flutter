@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_weather_app/models/weather_model.dart';
+import 'package:my_weather_app/pages/cities_bottomsheet.dart';
 import 'package:my_weather_app/pages/city_list_search.dart';
-import 'package:my_weather_app/utils/sehir_db.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/fl_chart.dart';
 import 'package:my_weather_app/utils/icon_image_kontrol.dart';
@@ -74,7 +74,6 @@ class _WeatherPageState extends State<WeatherPage>
         ],
       ),
     ),
-    drawer: _drawer(context),
     drawerEnableOpenDragGesture: false,
     extendBodyBehindAppBar: true,
   );
@@ -86,150 +85,30 @@ _appbar(con)
 
   return AppBar
   (
-
     toolbarHeight: 80,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    actions:
-    [
-      Container
-      (
-        padding: const EdgeInsets.only(top: 10, right: 15),
-        child: Column
+    leading: IconButton(onPressed: (){}, icon: Icon(Icons.favorite,color: Styles.whiteColor)),
+    centerTitle: true,
+    title: Column
+    (
+      children:
+      [
+        Text(prov.sehirText.toString(), style: GoogleFonts.inter(textStyle: TextStyle
         (
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-          [
-            Text(prov.sehirText.toString(),
-                style: GoogleFonts.inter(textStyle: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: prov.fontRenkKontrol()))),
-            Text(prov.ulkeText.toString(),
-                style: GoogleFonts.inter(textStyle: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: prov.fontRenkKontrol()))),
-        ],
-      )),
-    ],
-    leading: Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Builder(
-        builder: (context) => IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            icon: FaIcon(FontAwesomeIcons.bars, color: prov.fontRenkKontrol())),
-      ),
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: prov.fontRenkKontrol()))),
+        Text(prov.ulkeText.toString(), style: GoogleFonts.inter(textStyle: TextStyle
+        (
+          fontSize: 18,
+          fontWeight: FontWeight.w400,
+          color: prov.fontRenkKontrol()))),
+      ],
     ),
+    actions:[ CitySheetWithButton(), ],
   );
 }
-
-_drawer(con) => Drawer
-(
-  backgroundColor: Color(0xFF78909C),
-  child: Column
-  (
-    mainAxisAlignment: MainAxisAlignment.center,
-    children:
-    [
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(children: [
-                Text("Geçmiş Listesi", style: Styles().bottomSheetText1),
-                SizedBox(width: 5),
-                FaIcon(FontAwesomeIcons.history, color: Colors.white, size: 20),
-              ]),
-            ),
-            Container //Geçmiş şehirler listesi kutusu
-                (
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Consumer<WeatherFetch>(
-                builder: (context, value, child) =>
-                    FutureBuilder<List<SehirlerList>>(
-                  future: SehirlerDAO().sehirOku(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      var sehirListSnap = snapshot.data;
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: sehirListSnap!.length,
-                          itemBuilder: (context, index) {
-                            var sehir = sehirListSnap[index];
-                            return ListTile(
-                              onTap: () {
-                                value.spots = [];
-                                value.api(sehir.sehirAd, sehir.ulkeAd,
-                                    sehir.lat, sehir.long);
-                                Navigator.pop(context);
-                              },
-                              title: Text(sehir.sehirAd,
-                                  style: Styles().bottomSheetText1),
-                              trailing: IconButton
-                              (
-                                onPressed: () //şehir Silme Butonu
-                                {
-                                  value.sehirSil(sehir.sehirID);
-                                },
-                                icon: FaIcon(FontAwesomeIcons.times)
-                              ),
-                            );
-                          });
-                    } else {
-                      return Center();
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      SizedBox(height: 80),
-      GestureDetector //Şehir arama butonu
-          (
-        onTap: () => Navigator.push(
-            con, MaterialPageRoute(builder: (context) => CityList())),
-        child: Container(
-          alignment: Alignment.center,
-          height: 40,
-          margin: const EdgeInsets.symmetric(horizontal: 60),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          child: Text("Şehir Ara", style: Styles().bottomSheetText2),
-        ),
-      ),
-      SizedBox(height: 15),
-      Consumer<WeatherFetch> //Konum butonu
-          (
-        builder: (context, value, child) => SizedBox(
-          width: 200,
-          child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                value.izinKontrol();
-              },
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                FaIcon(FontAwesomeIcons.searchLocation,
-                    size: 20, color: Colors.white),
-                SizedBox(width: 5),
-                Text("Konumdan Bul", style: Styles().bottomSheetText1),
-              ])),
-        ),
-      ),
-    ],
-  ));
 
 _page1(con) => Center
 (
@@ -349,7 +228,6 @@ _page1(con) => Center
       ),
     ),
   );
-
 
 _switchButton(switchIcon, tap) => InkWell
 (

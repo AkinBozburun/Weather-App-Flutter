@@ -8,8 +8,10 @@ import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/styles.dart';
 
-class WeatherFetch extends ChangeNotifier {
-  Future<void> sehirSil(i) async {
+class WeatherFetch extends ChangeNotifier
+{
+  Future<void> sehirSil(i) async
+  {
     await SehirlerDAO().sehirSil(i);
     notifyListeners();
     print("silindi");
