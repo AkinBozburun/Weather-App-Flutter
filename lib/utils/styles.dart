@@ -9,6 +9,11 @@ class Styles
 
   final dailyForecastText = GoogleFonts.inter(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w600);
   
-  final bottomSheetText1 = GoogleFonts.inter(fontSize: 14, color: blackColor, fontWeight: FontWeight.w500);
+  final bottomSheetText1 = GoogleFonts.inter(fontSize: 16, color: blackColor, fontWeight: FontWeight.w500);
   final bottomSheetText2 = GoogleFonts.inter(fontSize: 18, color: blackColor, fontWeight: FontWeight.w600);
+
+  final cityListText = GoogleFonts.inter(fontSize: 18, color: blackColor, fontWeight: FontWeight.w500);
+  final cityListTextSub = GoogleFonts.inter(fontSize: 16, color: blackColor, fontWeight: FontWeight.w400);
+
+  final favsText = GoogleFonts.inter(fontSize: 14, color: blackColor, fontWeight: FontWeight.w500);
 }

@@ -160,4 +160,12 @@ class WeatherFetch extends ChangeNotifier
     }
     notifyListeners();
   }
+
+  String textCheck = "";
+
+  textBool(textfieldText)
+  {
+    textCheck = textfieldText;
+    notifyListeners();
+  }
 }

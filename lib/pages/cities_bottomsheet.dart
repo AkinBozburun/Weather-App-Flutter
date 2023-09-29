@@ -30,7 +30,6 @@ _bottomSheet(context)
 {
   final provider = Provider.of<WeatherFetch>(context);
   final radius = Radius.circular(24);
-
   return Container
   (
     margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -45,8 +44,10 @@ _bottomSheet(context)
       [
         SizedBox(height: 16),
         _searchBar(context),
-        SizedBox(height: 16),
-        Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2),
+        SizedBox(height: 16),        
+        provider.textCheck == "" ?
+        Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(),
+        _sehirList(context),
         SizedBox(height: 16),
         _favs(),
       ],
@@ -67,6 +68,7 @@ _searchBar(context)
         child: Container
         (
           margin: const EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(color: Styles.softGreyColor, borderRadius: BorderRadius.circular(12)),
           child: TextField
           (
@@ -74,9 +76,11 @@ _searchBar(context)
             (
               contentPadding: const EdgeInsets.all(4),
               hintText: "Aramak için tıklayın...",
-              border: InputBorder.none
+              border: InputBorder.none,
+              hintStyle: Styles().bottomSheetText1,
             ),
-            onChanged: (text) {},
+            onChanged: (value) => provider.textBool(value),
+            
           ),
         ),        
       ),
@@ -94,33 +98,71 @@ _searchBar(context)
   );
 }
 
-_favs()
+_sehirList(context)
 {
+  final provider = Provider.of<WeatherFetch>(context);
+
   return Column
   (
     children:
     [
-      Row(children: [Icon(Icons.favorite_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",style: Styles().bottomSheetText2)]),
-      Container
+      if(provider.textCheck == "") Center() else Container
       (
-        height: 64,
-        child: ListView.builder
+        height: MediaQuery.of(context).viewInsets.bottom*0.8,
+        width: MediaQuery.of(context).size.height*0.8,
+        child: ListView.separated
         (
-          scrollDirection: Axis.horizontal,
           itemCount: 6,
-          itemBuilder: (context, index) => Container
+          itemBuilder: (context, index) => ListTile
           (
-            margin: const EdgeInsets.only(top: 16,right: 16),            
-            width: 81,
-            child: Center(child: Text("Ataevler",style: Styles().bottomSheetText1)),
-            decoration: BoxDecoration
-            (
-              color: Styles.softGreyColor,
-              borderRadius: BorderRadius.circular(12)
-            ),
+            title: Text("Istanbul",style: Styles().cityListText),
+            subtitle: Text("Türkiye",style: Styles().cityListTextSub),                  
           ),
+          separatorBuilder: (context, index) => 
+          Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2),
         ),
       ),
     ],
+  );
+}
+
+_favs()
+{
+  return Positioned
+  (
+    child: Container
+    (
+      height: 106,
+      color: Colors.red,
+      child: Column
+      (
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+        [
+          Row(children: [Icon(Icons.favorite_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
+          style: Styles().bottomSheetText2)]),
+          Container
+          (
+            height: 64,
+            child: ListView.builder
+            (
+              scrollDirection: Axis.horizontal,
+              itemCount: 6,
+              itemBuilder: (context, index) => Container
+              (
+                margin: const EdgeInsets.only(top: 16,right: 16),            
+                width: 81,
+                child: Center(child: Text("Ataevler",style: Styles().favsText)),
+                decoration: BoxDecoration
+                (
+                  color: Styles.softGreyColor,
+                  borderRadius: BorderRadius.circular(12)
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

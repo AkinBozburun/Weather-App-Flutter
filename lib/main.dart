@@ -6,21 +6,20 @@ import 'package:my_weather_app/pages/weather_page.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main()
+{
   initializeDateFormatting();
   Intl.defaultLocale = "tr_TR";
 
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  //Ekran döndürmeyi iptal etme.
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemStatusBarContrastEnforced: true,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarDividerColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark));
+  //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //    systemStatusBarContrastEnforced: true,
+  //    systemNavigationBarColor: Colors.transparent,
+  //    systemNavigationBarDividerColor: Colors.transparent,
+  //    systemNavigationBarIconBrightness: Brightness.light,
+  //    statusBarIconBrightness: Brightness.dark));
 
   runApp(MyApp());
 }

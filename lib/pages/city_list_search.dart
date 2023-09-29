@@ -53,7 +53,6 @@ class _CityListState extends State<CityList> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //backgroundColor: Colors.blue.shade400,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -68,18 +67,22 @@ class _CityListState extends State<CityList> {
       extendBodyBehindAppBar: true,
       body: Stack(
         alignment: Alignment.center,
-        children: [
+        children:
+        [
           Container //Background Gradient
-              (
-            decoration: BoxDecoration(
+          (
+            decoration: BoxDecoration
+            (
                 gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                  Colors.blue.shade700,
-                  Colors.blue.shade400,
-                  Colors.blue.shade300
-                ])),
+                    colors:
+                    [
+                      Colors.blue.shade700,
+                      Colors.blue.shade400,
+                      Colors.blue.shade300
+                    ])
+            ),
           ),
           SafeArea //Şehirler List
               (
