@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:my_weather_app/pages/city_list_search.dart';
 import 'package:my_weather_app/pages/weather_page.dart';
+import 'package:my_weather_app/utils/db_dao.dart';
+import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,27 +17,27 @@ void main()
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //    systemStatusBarContrastEnforced: true,
-  //    systemNavigationBarColor: Colors.transparent,
-  //    systemNavigationBarDividerColor: Colors.transparent,
-  //    systemNavigationBarIconBrightness: Brightness.light,
-  //    statusBarIconBrightness: Brightness.dark));
-
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget
+{
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
+  Widget build(BuildContext context)
+  {
+    return MultiProvider
+    (
+      providers:
+      [
         ChangeNotifierProvider(create: (context) => WeatherFetch()),
+        ChangeNotifierProvider(create: (context) => VisualProvider()),
       ],
-      child: MaterialApp(
+      child: MaterialApp
+      (
         title: 'My Weather',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
+        theme: ThemeData
+        (
           useMaterial3: true,
           primarySwatch: Colors.blue,
         ),
@@ -54,24 +57,45 @@ class BootPage extends StatefulWidget
 
 class _BootPageState extends State<BootPage>
 {
+  gecmisSehirKontrol() async
+  {
+    final sehirListesi = await SehirlerDAO().sehirOku();
+    if (sehirListesi.isEmpty)
+    {
+      print("liste boş");
+      Navigator.pushAndRemoveUntil(context,
+      MaterialPageRoute(builder: (context) => CityList()), (route) => false);
+    }
+    else
+    {
+      print("Listede item var");
+      var sehir = sehirListesi.last;
+      Provider.of<WeatherFetch>(context, listen: false)
+      .api(sehir.sehirAd, sehir.ulkeAd, sehir.lat, sehir.long);
+    }
+  }
+
+  @override
+  void initState()
+  {
+    gecmisSehirKontrol();
+    super.initState();
+  }
+
   _booting()
   {
     final provider = Provider.of<WeatherFetch>(context);
 
-    if (provider.hourlyData == [])
-    {
-      return Scaffold
+    return
+    provider.derece == null ? Scaffold
+    (
+      backgroundColor: Color(0xff44B0FF),
+      body: Center
       (
-        backgroundColor: Color(0xff44B0FF),
-        body: Center
-        (
-          child: CircularProgressIndicator(),
-        ),
-      );
-    } else
-    {
-      return WeatherPage();
-    }
+        child: CircularProgressIndicator(color: Styles.whiteColor),
+      ),
+    ) :
+     WeatherPage();
   }
 
   @override

@@ -28,12 +28,15 @@ class CitySheetWithButton extends StatelessWidget
 
 _bottomSheet(context)
 {
-  final provider = Provider.of<WeatherFetch>(context);
+  final provider = Provider.of<VisualProvider>(context);
   final radius = Radius.circular(24);
-  return Container
+  final double height = MediaQuery.of(context).size.height;
+  return AnimatedContainer
   (
+    duration: const Duration(milliseconds: 150),
+    curve: Curves.ease,
     margin: const EdgeInsets.symmetric(horizontal: 16),
-    height: MediaQuery.of(context).size.height,
+    height: MediaQuery.of(context).viewInsets.bottom > 0 ? height : height*0.35,
     decoration: BoxDecoration
     (
       borderRadius: BorderRadius.only(topLeft: radius,topRight: radius)
@@ -46,10 +49,9 @@ _bottomSheet(context)
         _searchBar(context),
         SizedBox(height: 16),        
         provider.textCheck == "" ?
-        Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(),
-        _sehirList(context),
+        Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(), 
         SizedBox(height: 16),
-        _favs(),
+        provider.textCheck == "" ? _favs() : _sehirList(context),
       ],
     ),
   );
@@ -57,7 +59,7 @@ _bottomSheet(context)
 
 _searchBar(context)
 {
-  final provider = Provider.of<WeatherFetch>(context);
+  final provider = Provider.of<VisualProvider>(context);
 
   return Row
   (
@@ -79,7 +81,7 @@ _searchBar(context)
               border: InputBorder.none,
               hintStyle: Styles().bottomSheetText1,
             ),
-            onChanged: (value) => provider.textBool(value),
+            onChanged: (value) => provider.textBool(value,context),
             
           ),
         ),        
@@ -100,16 +102,16 @@ _searchBar(context)
 
 _sehirList(context)
 {
-  final provider = Provider.of<WeatherFetch>(context);
+  final provider = Provider.of<VisualProvider>(context);
 
   return Column
   (
     children:
     [
-      if(provider.textCheck == "") Center() else Container
+      Container
       (
-        height: MediaQuery.of(context).viewInsets.bottom*0.8,
-        width: MediaQuery.of(context).size.height*0.8,
+        height: MediaQuery.of(context).viewInsets.bottom,
+        width: MediaQuery.of(context).size.width,
         child: ListView.separated
         (
           itemCount: 6,
@@ -128,41 +130,33 @@ _sehirList(context)
 
 _favs()
 {
-  return Positioned
+  return Column
   (
-    child: Container
-    (
-      height: 106,
-      color: Colors.red,
-      child: Column
+    mainAxisAlignment: MainAxisAlignment.center,
+    children:
+    [
+      Row(children: [Icon(Icons.favorite_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
+      style: Styles().bottomSheetText2)]),
+      Container
       (
-        mainAxisAlignment: MainAxisAlignment.center,
-        children:
-        [
-          Row(children: [Icon(Icons.favorite_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
-          style: Styles().bottomSheetText2)]),
-          Container
+        height: 64,
+        child: ListView.builder
+        (
+          scrollDirection: Axis.horizontal,
+          itemCount: 6,
+          itemBuilder: (context, index) => Container
           (
-            height: 64,
-            child: ListView.builder
+            margin: const EdgeInsets.only(top: 16,right: 16),            
+            width: 81,
+            child: Center(child: Text("Ataevler",style: Styles().favsText)),
+            decoration: BoxDecoration
             (
-              scrollDirection: Axis.horizontal,
-              itemCount: 6,
-              itemBuilder: (context, index) => Container
-              (
-                margin: const EdgeInsets.only(top: 16,right: 16),            
-                width: 81,
-                child: Center(child: Text("Ataevler",style: Styles().favsText)),
-                decoration: BoxDecoration
-                (
-                  color: Styles.softGreyColor,
-                  borderRadius: BorderRadius.circular(12)
-                ),
-              ),
+              color: Styles.softGreyColor,
+              borderRadius: BorderRadius.circular(12)
             ),
           ),
-        ],
+        ),
       ),
-    ),
+    ],
   );
 }

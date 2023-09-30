@@ -132,21 +132,14 @@ class WeatherFetch extends ChangeNotifier
     }
   }
 
-  Future<DailyList> forecast(String api) async {
+  Future<DailyList> forecast(String api) async
+  {
     var jsonData = await http.get(Uri.parse(api));
     sayac++;
     print(sayac);
     var foreTemps = DailyList.fromjson(json.decode(jsonData.body));
     _forecastDataYakala(foreTemps);
     return foreTemps;
-  }
-
-  bool switchIcon = true;
-
-  switchIconChange()
-  {
-    switchIcon = !switchIcon;
-    notifyListeners();
   }
 
   _forecastDataYakala(jsonTemp) //Günlük tahminler Grafik ve Tablo
@@ -159,11 +152,44 @@ class WeatherFetch extends ChangeNotifier
       i++;
     }
     notifyListeners();
+  }  
+}
+
+class VisualProvider extends ChangeNotifier
+{
+  bool switchIcon = true;
+
+  switchIconChange()
+  {
+    switchIcon = !switchIcon;
+    notifyListeners();
+  }
+
+  double height = 400;
+
+  bool lH = true;
+
+  changeHeight()
+  {
+    lH = !lH;
+    notifyListeners();
+  }
+
+  heigher()
+  {
+    height = 600;
+    notifyListeners();
+  }
+
+  lower()
+  {
+    height = 400;
+    notifyListeners();
   }
 
   String textCheck = "";
 
-  textBool(textfieldText)
+  textBool(textfieldText,context)
   {
     textCheck = textfieldText;
     notifyListeners();

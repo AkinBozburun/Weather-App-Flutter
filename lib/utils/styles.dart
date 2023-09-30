@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class Styles
 {
   static Color whiteColor = Color(0xffF3F3F3);
-  static Color softGreyColor = Color(0xffE3E3E3);
+  static Color softGreyColor = Color(0xFFE3E3E3);
   static Color blackColor = Color(0xff0E0E0E);
 
   final dailyForecastText = GoogleFonts.inter(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w600);
