@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,11 @@ class CitySheetWithButton extends StatelessWidget
         backgroundColor: Styles.whiteColor,
         isScrollControlled: true,
         useSafeArea: true,
-        showDragHandle: true,        
+        showDragHandle: true,
+        shape: RoundedRectangleBorder
+        (
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))
+        )
       ),
       icon: Icon(Icons.keyboard_arrow_down_rounded,color: Styles.whiteColor)
     );
@@ -29,18 +34,13 @@ class CitySheetWithButton extends StatelessWidget
 _bottomSheet(context)
 {
   final provider = Provider.of<VisualProvider>(context);
-  final radius = Radius.circular(24);
   final double height = MediaQuery.of(context).size.height;
-  return AnimatedContainer
+
+  return Container
   (
-    duration: const Duration(milliseconds: 150),
-    curve: Curves.ease,
+    
     margin: const EdgeInsets.symmetric(horizontal: 16),
-    height: MediaQuery.of(context).viewInsets.bottom > 0 ? height : height*0.35,
-    decoration: BoxDecoration
-    (
-      borderRadius: BorderRadius.only(topLeft: radius,topRight: radius)
-    ),
+    height: height,
     child: Column
     (
       children:
@@ -77,9 +77,10 @@ _searchBar(context)
             decoration: InputDecoration
             (
               contentPadding: const EdgeInsets.all(4),
-              hintText: "Aramak için tıklayın...",
+              hintText: "Şehir arayın...",
               border: InputBorder.none,
-              hintStyle: Styles().bottomSheetText1,
+              hintStyle:  GoogleFonts.inter(
+                fontSize: 16, color: Colors.black38, fontWeight: FontWeight.w400),
             ),
             onChanged: (value) => provider.textBool(value,context),
             
@@ -102,15 +103,13 @@ _searchBar(context)
 
 _sehirList(context)
 {
-  final provider = Provider.of<VisualProvider>(context);
-
   return Column
   (
     children:
     [
       Container
       (
-        height: MediaQuery.of(context).viewInsets.bottom,
+        height: MediaQuery.of(context).size.height*0.5,
         width: MediaQuery.of(context).size.width,
         child: ListView.separated
         (
@@ -120,8 +119,8 @@ _sehirList(context)
             title: Text("Istanbul",style: Styles().cityListText),
             subtitle: Text("Türkiye",style: Styles().cityListTextSub),                  
           ),
-          separatorBuilder: (context, index) => 
-          Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2),
+          separatorBuilder: (context, index)
+          => Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2),
         ),
       ),
     ],
@@ -139,7 +138,7 @@ _favs()
       style: Styles().bottomSheetText2)]),
       Container
       (
-        height: 64,
+        height: 72,
         child: ListView.builder
         (
           scrollDirection: Axis.horizontal,

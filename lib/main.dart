@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:my_weather_app/pages/city_list_search.dart';
 import 'package:my_weather_app/pages/weather_page.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
-import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -66,13 +65,6 @@ class _BootPageState extends State<BootPage>
       Navigator.pushAndRemoveUntil(context,
       MaterialPageRoute(builder: (context) => CityList()), (route) => false);
     }
-    else
-    {
-      print("Listede item var");
-      var sehir = sehirListesi.last;
-      Provider.of<WeatherFetch>(context, listen: false)
-      .api(sehir.sehirAd, sehir.ulkeAd, sehir.lat, sehir.long);
-    }
   }
 
   @override
@@ -82,22 +74,6 @@ class _BootPageState extends State<BootPage>
     super.initState();
   }
 
-  _booting()
-  {
-    final provider = Provider.of<WeatherFetch>(context);
-
-    return
-    provider.derece == null ? Scaffold
-    (
-      backgroundColor: Color(0xff44B0FF),
-      body: Center
-      (
-        child: CircularProgressIndicator(color: Styles.whiteColor),
-      ),
-    ) :
-     WeatherPage();
-  }
-
   @override
-  Widget build(BuildContext context) => _booting();
+  Widget build(BuildContext context) => WeatherPage();
 }

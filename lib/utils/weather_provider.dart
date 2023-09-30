@@ -165,28 +165,6 @@ class VisualProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  double height = 400;
-
-  bool lH = true;
-
-  changeHeight()
-  {
-    lH = !lH;
-    notifyListeners();
-  }
-
-  heigher()
-  {
-    height = 600;
-    notifyListeners();
-  }
-
-  lower()
-  {
-    height = 400;
-    notifyListeners();
-  }
-
   String textCheck = "";
 
   textBool(textfieldText,context)

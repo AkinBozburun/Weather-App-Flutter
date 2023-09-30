@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/pages/cities_bottomsheet.dart';
+import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/fl_chart.dart';
 import 'package:my_weather_app/utils/icon_image_kontrol.dart';
 import 'package:my_weather_app/utils/styles.dart';
@@ -18,39 +19,66 @@ class WeatherPage extends StatefulWidget
 
 class _WeatherPageState extends State<WeatherPage>
 {
+  _initData() async
+  {
+    final sehirListesi = await SehirlerDAO().sehirOku();
+
+    var sehir = sehirListesi.last;
+      Provider.of<WeatherFetch>(context, listen: false)
+      .api(sehir.sehirAd, sehir.ulkeAd, sehir.lat, sehir.long);
+  }
+
   @override
-  Widget build(BuildContext context) => Scaffold
-  (
-    backgroundColor: Colors.blue.shade300,
-    resizeToAvoidBottomInset: false,
-    appBar: _appbar(context),    
-    body: Center
+  void initState()
+  {
+    _initData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context)
+  {
+    final provider = Provider.of<WeatherFetch>(context);
+
+    return
+    provider.derece == null ? Scaffold
     (
-      child: Stack
+      backgroundColor: Color(0xff44B0FF),
+      body: Center(child: CircularProgressIndicator(color: Styles.whiteColor)),
+    ) :
+    Scaffold
+    (
+      backgroundColor: Colors.blue.shade300,
+      resizeToAvoidBottomInset: false,
+      appBar: _appbar(context),    
+      body: Center
       (
-        children:
-        [
-          Consumer<WeatherFetch>(builder: (context, value, child) => DataControl().imageKontrol
-          (
-            value.icon,
-            MediaQuery.of(context).size.height,
-            MediaQuery.of(context).size.width,
-          )),
-          PageView
-          (
-            scrollDirection: Axis.horizontal,
-            children:
-            [
-              _page1(context),
-              _page2(context),
-            ],
-          ),
-        ],
+        child: Stack
+        (
+          children:
+          [
+            Consumer<WeatherFetch>(builder: (context, value, child) => DataControl().imageKontrol
+            (
+              value.icon,
+              MediaQuery.of(context).size.height,
+              MediaQuery.of(context).size.width,
+            )),
+            PageView
+            (
+              scrollDirection: Axis.horizontal,
+              children:
+              [
+                _page1(context),
+                _page2(context),
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
-    drawerEnableOpenDragGesture: false,
-    extendBodyBehindAppBar: true,
-  );
+      drawerEnableOpenDragGesture: false,
+      extendBodyBehindAppBar: true,
+    );
+  }
 }
 
 _appbar(con)
@@ -59,7 +87,7 @@ _appbar(con)
 
   return AppBar
   (
-    toolbarHeight: 70,
+    toolbarHeight: 82,
     backgroundColor: Colors.transparent,
     elevation: 0,
     leading: IconButton(onPressed: (){}, icon: Icon(Icons.favorite,color: Styles.whiteColor)),
@@ -69,7 +97,7 @@ _appbar(con)
       [
         Text(prov.sehirText.toString(), style: GoogleFonts.inter(textStyle: TextStyle
         (
-          fontSize: 24,
+          fontSize: 22,
           fontWeight: FontWeight.w600,
           color: prov.fontRenkKontrol()))),
         Text(prov.ulkeText.toString(), style: GoogleFonts.inter(textStyle: TextStyle
@@ -255,44 +283,41 @@ _hourly(switchIcon,con)
   { 
     return ListView.separated //list
     (
-      itemCount: 24,
-      itemBuilder: (context, index)
-      {        
-        return SizedBox
+      itemCount: 25,
+      itemBuilder: (context, index) => SizedBox
+      (
+        height: 64,
+        child: Row
         (
-          height: 64,
-          child: Row
-          (
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children:
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children:
+          [
+            Text
+            (
+              time(prov.hourlyData[index].time),
+              style: Styles().dailyForecastText,
+            ),
+            Row(children:
             [
-              Text
+              Text(prov.hourlyData[index].temp.toInt().toString()+"°",
+              style: Styles().dailyForecastText),
+              SizedBox(width: 8),
+              SizedBox //Icon
               (
-                index == 0 ? "Şimdi" : time(prov.hourlyData[index].time),
-                style: Styles().dailyForecastText,
-              ),
-              Row(children:
-              [
-                Text(prov.hourlyData[index].temp.toInt().toString()+"°",
-                style: Styles().dailyForecastText),
-                SizedBox(width: 8),
-                SizedBox //Icon
-                (
-                  height: 42,
-                  width: 42,
-                  child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
-                ),                                  
-              ]),
-              SizedBox
-              (
-                width: 80,
-                child: Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText,textAlign: TextAlign.end,)
-              ),
-            ]
-          ),
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.white24),
+                height: 42,
+                width: 42,
+                child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
+              ),                                  
+            ]),
+            SizedBox
+            (
+              width: 80,
+              child: Text(prov.hourlyData[index].describtion,style: Styles().dailyForecastText,textAlign: TextAlign.end,)
+            ),
+          ]
+        ),
+      ),
+      separatorBuilder: (BuildContext context, int index) =>  Divider(color: Colors.white24),
     );
   }
 }
@@ -308,7 +333,7 @@ _page2(con)
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children:
       [
-        Container
+        Container //Saatlik tahminler Penceresi
         (
           padding: const EdgeInsets.symmetric(horizontal: 16),
           height: MediaQuery.of(con).size.height * 0.5,
@@ -347,12 +372,14 @@ _page2(con)
         ),
         Container //7 Günlük Tahminler
         (
-          height: MediaQuery.of(con).size.height * 0.25,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          height: MediaQuery.of(con).size.height * 0.24,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Consumer<WeatherFetch>(
-            builder: (context, value, child) => FutureBuilder<DailyList>(
+            builder: (context, value, child) => FutureBuilder<DailyList>
+            (
               future: value.foreFuture,
-              builder: (context, snap) {
+              builder: (context, snap)
+              {
                 if (snap.hasData) {
                   var list = snap.data!.dayTemps;
                   return ListView.builder(
@@ -361,46 +388,58 @@ _page2(con)
                     itemBuilder: (con, i) {
                       if (i == 0) return Center();
                       return Container(
-                        width: MediaQuery.of(con).size.width * 0.25,
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        width: MediaQuery.of(con).size.width * 0.26,
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                             color: value.panelRenkKontrol(),
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(24)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                                DateFormat.EEEE().format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        list[i].time * 1000)),
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: value.fontRenkKontrol()))),
-                            Divider(
-                                color: value.fontRenkKontrol(),
-                                thickness: 0.2,
-                                indent: 20,
-                                endIndent: 20,
-                                height: 20),
-                            SizedBox(
-                              height: MediaQuery.of(con).size.height * 0.1,
+                          children:
+                          [
+                            Text
+                            (
+                              DateFormat.EEEE().format(DateTime.fromMillisecondsSinceEpoch(
+                                list[i].time * 1000)),
+                              style: GoogleFonts.inter(textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: value.fontRenkKontrol()))
+                            ),
+                            Divider
+                            (
+                              color: value.fontRenkKontrol(),
+                              thickness: 0.2,
+                              indent: 20,
+                              endIndent: 20,
+                              height: 20
+                            ),
+                            SizedBox
+                            (
+                              height:
+                               MediaQuery.of(con).size.height * 0.1 > 80 ? 80 :
+                               MediaQuery.of(con).size.height * 0.1,
                               child: DataControl().iconKontrol(list[i].icon,false),
                             ),
-                            Divider(
+                            Divider
+                            (
                                 color: value.fontRenkKontrol(),
                                 thickness: 0.2,
                                 indent: 20,
                                 endIndent: 20,
-                                height: 20),
-                            Text(
+                                height: 20
+                            ),
+                            Text
+                            (
                                 "${list[i].day.toInt()}\u00b0 / ${list[i].night.toInt()}\u00b0",
                                 style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
+                                    textStyle: TextStyle
+                                    (
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: value.fontRenkKontrol())))
+                                        color: value.fontRenkKontrol()
+                                    ))
+                            )
                           ],
                         ),
                       );
