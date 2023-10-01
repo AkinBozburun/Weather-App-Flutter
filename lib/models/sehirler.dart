@@ -1,16 +1,16 @@
-class Sehirler
+class Cities
 {
-  late String sehirAd;
-  late String ulkeAd;
+  late String city;
+  late String country;
   late String lati;
   late String long;
 
-  Sehirler(this.sehirAd, this.ulkeAd, this.lati, this.long);
+  Cities(this.city, this.country, this.lati, this.long);
 
-  Sehirler.fromjson(Map<String, dynamic> json)
+  Cities.fromjson(Map<String, dynamic> json)
   {
-    sehirAd = json["name"] as String;
-    ulkeAd = json["country_name"] as String;
+    city = json["name"] as String;
+    country = json["country_name"] as String;
     lati = json["latitude"] ?? "";
     long = json["longitude"]?? "";
   }

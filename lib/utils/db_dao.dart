@@ -17,8 +17,8 @@ class SehirlerDAO {
     });
   }
 
-  Future<void> sehirEkle(
-      String sehirAd, String ulkeKod, String lat, String long) async {
+  Future<void> sehirEkle(String sehirAd, String ulkeKod, String lat, String long) async
+  {
     var db = await DBYardimcisi.dbErisim();
 
     var sehirBilgi = <String, dynamic>{};

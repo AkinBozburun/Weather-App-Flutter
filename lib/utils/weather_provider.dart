@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_weather_app/models/sehirler.dart';
 import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/styles.dart';
@@ -152,7 +153,42 @@ class WeatherFetch extends ChangeNotifier
       i++;
     }
     notifyListeners();
-  }  
+  }
+
+  List<Cities> cityList = [];
+  List<Cities> citySearchList = [];
+
+  cityListFetch() async
+  {
+    final String api = "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/states.json";
+
+    var jsonData = await http.get(Uri.parse(api));    
+
+    var data = json.decode(jsonData.body);
+
+    _cityData(data);
+  }
+
+  _cityData(data)
+  {
+    if(cityList.isEmpty)
+    {
+      for(var cityData in data)
+      {
+        cityList.add(Cities.fromjson(cityData));
+      }
+    }
+    citySearchList = cityList;
+    notifyListeners();
+  }
+
+  citySearch(String city)
+  {    
+    citySearchList = cityList.where((item)
+    => item.city.toLowerCase().contains(city.toLowerCase())).toList();
+    notifyListeners();
+    
+  }
 }
 
 class VisualProvider extends ChangeNotifier

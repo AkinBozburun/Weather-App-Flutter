@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +38,7 @@ _bottomSheet(context)
   final double height = MediaQuery.of(context).size.height;
 
   return Container
-  (
-    
+  (    
     margin: const EdgeInsets.symmetric(horizontal: 16),
     height: height,
     child: Column
@@ -60,6 +60,7 @@ _bottomSheet(context)
 _searchBar(context)
 {
   final provider = Provider.of<VisualProvider>(context);
+  final providerWeather = Provider.of<WeatherFetch>(context);
 
   return Row
   (
@@ -69,32 +70,43 @@ _searchBar(context)
       (
         child: Container
         (
-          margin: const EdgeInsets.only(right: 16),
+          margin: const EdgeInsets.only(right: 8),
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(color: Styles.softGreyColor, borderRadius: BorderRadius.circular(12)),
           child: TextField
           (
             decoration: InputDecoration
             (
+              icon: Icon(Icons.search_rounded),
+              iconColor: Colors.black38,
               contentPadding: const EdgeInsets.all(4),
               hintText: "Şehir arayın...",
               border: InputBorder.none,
               hintStyle:  GoogleFonts.inter(
                 fontSize: 16, color: Colors.black38, fontWeight: FontWeight.w400),
             ),
-            onChanged: (value) => provider.textBool(value,context),
+            onChanged: (value)
+            {
+              provider.textBool(value,context);
+              providerWeather.citySearch(value);
+            },
             
           ),
         ),        
       ),
-      Container
+      InkWell
       (
-        height: 46, width: 46,
-        child: Center(child: Icon(Icons.location_city)),
-        decoration: BoxDecoration
+        onTap: () => print("tıklandı"),
+        borderRadius: BorderRadius.circular(12),
+        child: Ink
         (
-          color: Styles.softGreyColor,
-          borderRadius: BorderRadius.circular(8),
+          height: 46, width: 46,
+          child: Center(child: Icon(Icons.gps_fixed_rounded)),
+          decoration: BoxDecoration
+          (
+            color: Styles.softGreyColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     ],
@@ -103,27 +115,36 @@ _searchBar(context)
 
 _sehirList(context)
 {
-  return Column
+  final prov = Provider.of<WeatherFetch>(context);
+  
+
+  return Container
   (
-    children:
-    [
-      Container
-      (
-        height: MediaQuery.of(context).size.height*0.5,
-        width: MediaQuery.of(context).size.width,
-        child: ListView.separated
+    height: MediaQuery.of(context).size.height*0.5,
+    width: MediaQuery.of(context).size.width,
+    child: ListView.separated
+    (
+      itemCount: prov.citySearchList.length,
+      itemBuilder: (context, index)
+      {
+        String turkeyCheck = prov.citySearchList[index].country == "Turkey" ?
+        "Türkiye" :  prov.citySearchList[index].country;
+
+        return ListTile
         (
-          itemCount: 6,
-          itemBuilder: (context, index) => ListTile
+          onTap: ()=> SehirlerDAO().sehirEkle
           (
-            title: Text("Istanbul",style: Styles().cityListText),
-            subtitle: Text("Türkiye",style: Styles().cityListTextSub),                  
+            prov.citySearchList[index].city, turkeyCheck,
+            prov.citySearchList[index].lati, prov.citySearchList[index].long
           ),
-          separatorBuilder: (context, index)
-          => Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2),
-        ),
-      ),
-    ],
+
+          title: Text(prov.citySearchList[index].city, style: Styles().cityListText),
+          subtitle: Text(turkeyCheck,style: Styles().cityListTextSub),                  
+        );
+      },
+      separatorBuilder: (context, index)
+      => Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2),
+    ),
   );
 }
 
@@ -134,7 +155,7 @@ _favs()
     mainAxisAlignment: MainAxisAlignment.center,
     children:
     [
-      Row(children: [Icon(Icons.favorite_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
+      Row(children: [Icon(Icons.bookmark_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
       style: Styles().bottomSheetText2)]),
       Container
       (
