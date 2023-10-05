@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,46 +13,46 @@ class CitySheetWithButton extends StatelessWidget
   {
     return IconButton
     (
-      onPressed: () => showModalBottomSheet
-      (
-        context: context,
-        builder: (context) => _bottomSheet(context),
-        backgroundColor: Styles.whiteColor,
-        isScrollControlled: true,
-        useSafeArea: true,
-        showDragHandle: true,
-        shape: RoundedRectangleBorder
-        (
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16))
-        )
-      ),
+      onPressed: () => bottomSheet(context),
       icon: Icon(Icons.keyboard_arrow_down_rounded,color: Styles.whiteColor)
     );
   }
 }
 
-_bottomSheet(context)
+bottomSheet(context)
 {
-  final provider = Provider.of<VisualProvider>(context);
+  final provider = Provider.of<VisualProvider>(context,listen: false);
   final double height = MediaQuery.of(context).size.height;
 
-  return Container
-  (    
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    height: height,
-    child: Column
-    (
-      children:
-      [
-        SizedBox(height: 16),
-        _searchBar(context),
-        SizedBox(height: 16),        
-        provider.textCheck == "" ?
-        Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(), 
-        SizedBox(height: 16),
-        provider.textCheck == "" ? _favs() : _sehirList(context),
-      ],
+  showModalBottomSheet
+  (
+    context: context,
+    builder: (context) => Container
+    (    
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: height,
+      child: Column
+      (
+        children:
+        [
+          SizedBox(height: 16),
+          _searchBar(context),
+          SizedBox(height: 16),        
+          provider.textCheck == "" ?
+          Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(), 
+          SizedBox(height: 16),
+          provider.textCheck == "" ? _favs() : _sehirList(context),
+        ],
+      ),
     ),
+    backgroundColor: Styles.whiteColor,
+    isScrollControlled: true,
+    useSafeArea: true,
+    showDragHandle: true,
+    shape: RoundedRectangleBorder
+    (
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16))
+    )
   );
 }
 
@@ -89,8 +88,7 @@ _searchBar(context)
             {
               provider.textBool(value,context);
               providerWeather.citySearch(value);
-            },
-            
+            },            
           ),
         ),        
       ),
@@ -116,6 +114,7 @@ _searchBar(context)
 _sehirList(context)
 {
   final prov = Provider.of<WeatherFetch>(context);
+  final prov2 = Provider.of<VisualProvider>(context);
   
 
   return Container
@@ -132,14 +131,15 @@ _sehirList(context)
 
         return ListTile
         (
-          onTap: ()=> SehirlerDAO().sehirEkle
-          (
-            prov.citySearchList[index].city, turkeyCheck,
-            prov.citySearchList[index].lati, prov.citySearchList[index].long
-          ),
-
+          onTap: ()
+          {
+            prov.fetchData(prov.citySearchList[index].city, turkeyCheck,
+            prov.citySearchList[index].lati, prov.citySearchList[index].long);
+            prov2.clearText();
+            Navigator.pop(context);
+          },
           title: Text(prov.citySearchList[index].city, style: Styles().cityListText),
-          subtitle: Text(turkeyCheck,style: Styles().cityListTextSub),                  
+          subtitle: Text(turkeyCheck,style: Styles().cityListTextSub),
         );
       },
       separatorBuilder: (context, index)

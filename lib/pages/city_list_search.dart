@@ -7,7 +7,8 @@ import 'package:my_weather_app/models/sehirler.dart';
 import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/pages/weather_page.dart';
 
-class CityList extends StatefulWidget {
+class CityList extends StatefulWidget
+{
   @override
   _CityListState createState() => _CityListState();
 }

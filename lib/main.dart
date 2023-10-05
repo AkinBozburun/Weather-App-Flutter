@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:my_weather_app/pages/city_list_search.dart';
 import 'package:my_weather_app/pages/weather_page.dart';
-import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -35,45 +33,9 @@ class MyApp extends StatelessWidget
       (
         title: 'My Weather',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData
-        (
-          useMaterial3: true,
-          primarySwatch: Colors.blue,
-        ),
-        home: BootPage(),
+        theme: ThemeData(useMaterial3: true),
+        home: WeatherPage(),
       ),
     );
   }
-}
-
-class BootPage extends StatefulWidget
-{
-  const BootPage({Key? key}) : super(key: key);
-
-  @override
-  State<BootPage> createState() => _BootPageState();
-}
-
-class _BootPageState extends State<BootPage>
-{
-  gecmisSehirKontrol() async
-  {
-    final sehirListesi = await SehirlerDAO().sehirOku();
-    if (sehirListesi.isEmpty)
-    {
-      print("liste boş");
-      Navigator.pushAndRemoveUntil(context,
-      MaterialPageRoute(builder: (context) => CityList()), (route) => false);
-    }
-  }
-
-  @override
-  void initState()
-  {
-    gecmisSehirKontrol();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) => WeatherPage();
 }

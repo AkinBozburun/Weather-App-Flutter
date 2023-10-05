@@ -26,9 +26,17 @@ class _WeatherPageState extends State<WeatherPage>
 
     final sehirListesi = await SehirlerDAO().sehirOku();
 
-    var sehir = sehirListesi.last;
+    if(sehirListesi.isNotEmpty)
+    {
+      final sehir = sehirListesi.last;
       Provider.of<WeatherFetch>(context, listen: false)
-      .api(sehir.sehirAd, sehir.ulkeAd, sehir.lat, sehir.long);
+      .fetchData(sehir.sehirAd, sehir.ulkeAd, sehir.lat, sehir.long);
+    }
+    else
+    {
+      Future.delayed(Duration(milliseconds: 100)).then((value) => bottomSheet(context));
+    }
+    
   }
 
   @override
@@ -41,8 +49,8 @@ class _WeatherPageState extends State<WeatherPage>
   @override
   Widget build(BuildContext context)
   {
-
-    SystemChrome.setSystemUIOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle
+    (
       const SystemUiOverlayStyle
       (
         statusBarColor: Colors.transparent,
@@ -65,7 +73,7 @@ class _WeatherPageState extends State<WeatherPage>
       (
         children:
         [
-          Consumer<WeatherFetch>(builder: (context, value, child) => DataControl().imageKontrol
+          Consumer<WeatherFetch>(builder: (context, value, child) => DataControl().backGroundCheck
           (
             value.icon,
             MediaQuery.of(context).size.height,
@@ -132,7 +140,7 @@ _page1(con) => Center
       Consumer<WeatherFetch> //Hava Durumu Icon
       (
         builder: (context, value, child) =>
-        DataControl().iconKontrol(value.icon,true),
+        DataControl().iconCheck(value.icon,true),
       ),
       SizedBox(height: 50),
       Consumer<WeatherFetch> //Hava Durumu Detay
@@ -336,7 +344,7 @@ _page2(con)
                               height:
                                MediaQuery.of(con).size.height * 0.1 > 80 ? 80 :
                                MediaQuery.of(con).size.height * 0.1,
-                              child: DataControl().iconKontrol(list[i].icon,false),
+                              child: DataControl().iconCheck(list[i].icon,false),
                             ),
                             Divider
                             (
@@ -453,7 +461,7 @@ _hourly(switchIcon,con)
               (
                 height: 42,
                 width: 42,
-                child: DataControl().iconKontrol(prov.hourlyData[index].icon,false)
+                child: DataControl().iconCheck(prov.hourlyData[index].icon,false)
               ),                                  
             ]),
             SizedBox

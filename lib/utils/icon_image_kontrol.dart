@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DataControl
 {
-  iconKontrol(gelenIcon,shadowOk)
+  iconCheck(gelenIcon,shadowOk)
   {
     switch(gelenIcon)
     {
@@ -19,7 +19,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent : Colors.amber.shade300 ,blurRadius: 70),
+            BoxShadow(color: shadowOk == false ? Colors.transparent : Colors.amber.shade300 ,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -36,7 +36,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.yellow.shade50,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.yellow.shade50,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -53,7 +53,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.grey.shade300,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.grey.shade300,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -70,7 +70,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white60,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent  :  Colors.white60,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -87,7 +87,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.blueGrey.shade600,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.blueGrey.shade600,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -104,7 +104,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.black26,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.black26,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -121,7 +121,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.yellow.shade100,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.yellow.shade100,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -138,7 +138,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -155,7 +155,7 @@ class DataControl
           shape: BoxShape.circle,
           boxShadow:
           [
-            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white,blurRadius: 100),
+            BoxShadow(color: shadowOk == false ? Colors.transparent :  Colors.white,blurRadius: 100,spreadRadius: -6),
           ]
         ),
       );
@@ -163,7 +163,7 @@ class DataControl
     }
   }
 
-  imageKontrol(gelenIcon,gelenH,gelenW)
+  backGroundCheck(gelenIcon,gelenH,gelenW)
   {
     switch(gelenIcon)
     {

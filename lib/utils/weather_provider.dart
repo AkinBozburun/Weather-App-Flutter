@@ -83,10 +83,11 @@ class WeatherFetch extends ChangeNotifier
     var konum = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
     spots = [];
-    api("", "", konum.latitude.toString(), konum.longitude.toString());
+    fetchData("", "", konum.latitude.toString(), konum.longitude.toString());
   }
 
-  api(String sehirDB, String ulkeDB, String lat, String long) {
+  fetchData(String sehirDB, String ulkeDB, String lat, String long)
+  {
     String havaDurumuAPI =
         "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$long&appid=f5aac4a1dc5827bf0daf0d1cdee290b1&units=metric&lang=tr";
     sehirText = sehirDB == "" ? "Anlık" : sehirDB;
@@ -96,7 +97,8 @@ class WeatherFetch extends ChangeNotifier
     foreFuture = forecast(havaDurumuAPI);
   }
 
-  Future<void> havaDurumuAl(String api) async {
+  Future<void> havaDurumuAl(String api) async
+  {
     var jsonData = await http.get(Uri.parse(api));
 
     sayac++;
@@ -206,6 +208,12 @@ class VisualProvider extends ChangeNotifier
   textBool(textfieldText,context)
   {
     textCheck = textfieldText;
+    notifyListeners();
+  }
+
+  clearText()
+  {
+    textCheck = "";
     notifyListeners();
   }
 }
