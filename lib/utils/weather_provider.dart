@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_weather_app/models/sehirler.dart';
@@ -43,10 +44,13 @@ class WeatherFetch extends ChangeNotifier
 
   bool konumkontrolcu = false;
 
-  Future<void> izinKontrol() async {
+  izinKontrol() async
+  {
     await Geolocator.requestPermission();
     LocationPermission izin = await Geolocator.checkPermission();
-    if (izin == LocationPermission.denied) {
+
+    if(izin == LocationPermission.denied)
+    {
       Fluttertoast.showToast(
         msg: "Konum Reddedildi",
         toastLength: Toast.LENGTH_SHORT,
@@ -55,7 +59,8 @@ class WeatherFetch extends ChangeNotifier
         backgroundColor: Colors.black,
       );
     }
-    if (izin == LocationPermission.deniedForever) {
+    if(izin == LocationPermission.deniedForever)
+    {
       Fluttertoast.showToast(
         msg: "Konum Kullanımı Engellendi",
         toastLength: Toast.LENGTH_SHORT,
@@ -64,32 +69,39 @@ class WeatherFetch extends ChangeNotifier
       );
     }
     bool servisKontrol = await Geolocator.isLocationServiceEnabled();
-    if (!servisKontrol) {
-      Fluttertoast.showToast(
+    if(!servisKontrol)
+    {
+      Fluttertoast.showToast
+      (
         msg: "Konum Servisi Kapalı",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2,
         backgroundColor: Colors.black38,
       );
-    } else {
+    }
+    else
+    {
       konumkontrolcu = true;
-      konumAl();
+      _konumAl();
     }
   }
 
-  Future<void> konumAl() async {
+  _konumAl() async
+  {
     await Geolocator.requestPermission();
-    var konum = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+    var konum = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    List<Placemark> placeMark = await placemarkFromCoordinates(konum.latitude, konum.longitude);
+    final name = placeMark.first.locality == "" ? placeMark.first.subLocality : placeMark.first.locality;
+    final country = placeMark.first.country;
     spots = [];
-    fetchData("", "", konum.latitude.toString(), konum.longitude.toString());
+    fetchData(name.toString(), country.toString(), konum.latitude.toString(), konum.longitude.toString());
   }
 
   fetchData(String sehirDB, String ulkeDB, String lat, String long)
   {
     String havaDurumuAPI =
-        "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$long&appid=f5aac4a1dc5827bf0daf0d1cdee290b1&units=metric&lang=tr";
+      "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$long&appid=f5aac4a1dc5827bf0daf0d1cdee290b1&units=metric&lang=tr";
     sehirText = sehirDB == "" ? "Anlık" : sehirDB;
     ulkeText = sehirDB == "" ? "(Konum)" : ulkeDB;
     havaDurumuAl(havaDurumuAPI);
@@ -188,9 +200,10 @@ class WeatherFetch extends ChangeNotifier
   {    
     citySearchList = cityList.where((item)
     => item.city.toLowerCase().contains(city.toLowerCase())).toList();
-    notifyListeners();
-    
+    notifyListeners();    
   }
+
+
 }
 
 class VisualProvider extends ChangeNotifier
@@ -205,7 +218,7 @@ class VisualProvider extends ChangeNotifier
 
   String textCheck = "";
 
-  textBool(textfieldText,context)
+  textBool(textfieldText)
   {
     textCheck = textfieldText;
     notifyListeners();

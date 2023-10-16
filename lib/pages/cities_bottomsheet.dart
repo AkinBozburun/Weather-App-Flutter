@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:my_weather_app/models/fav_cities_model.dart';
+import 'package:my_weather_app/utils/get_box.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,12 @@ bottomSheet(context)
 {
   final provider = Provider.of<VisualProvider>(context,listen: false);
   final double height = MediaQuery.of(context).size.height;
+
+  if(!Hive.isBoxOpen("favCities"))
+  {
+    Hive.openBox<FavCities>("favCities");
+    print("fav liste açıldı");
+  }
 
   showModalBottomSheet
   (
@@ -63,7 +71,7 @@ _searchBar(context)
   (
     children:
     [
-      Expanded
+      Expanded //TextField
       (
         child: Container
         (
@@ -84,15 +92,19 @@ _searchBar(context)
             ),
             onChanged: (value)
             {
-              provider.textBool(value,context);
+              provider.textBool(value);
               providerWeather.citySearch(value);
             },            
           ),
         ),        
       ),
-      InkWell
+      InkWell //Location Button
       (
-        onTap: () => print("tıklandı"),
+        onTap:()
+        {
+          providerWeather.izinKontrol();
+          Navigator.pop(context);
+        },
         borderRadius: BorderRadius.circular(12),
         child: Ink
         (
@@ -162,7 +174,9 @@ _sehirList(context)
 
 _favs()
 {
-  List favList =["Ataevler","Abbasağa","Yeni Mahalle","Suadiye"];
+  List favList = ["Ataevler","Abbasağa","Yeni Mahalle","Suadiye"];
+
+  final boxList = Boxes.getFavs().values.toList().cast<FavCities>();
 
   return Column
   (
@@ -171,7 +185,7 @@ _favs()
       Row(children: [Icon(Icons.bookmark_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
       style: Styles().bottomSheetText2)]),
       SizedBox(height: 16),
-      Container
+      boxList.isNotEmpty? Container
       (
         height: 48,
         child: ListView.builder
@@ -186,11 +200,11 @@ _favs()
             decoration: BoxDecoration
             (
               color: Styles.softGreyColor,
-              borderRadius: BorderRadius.circular(12)
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
         ),
-      ),
+      )  : Center(child: CircularProgressIndicator(color: Styles.blackColor)),
     ],
   );
 }

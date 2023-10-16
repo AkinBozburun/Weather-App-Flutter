@@ -26,7 +26,7 @@ class _WeatherPageState extends State<WeatherPage>
 
     final box = await Hive.openBox("initialCity");
 
-    if(box.isOpen)
+    if(box.isNotEmpty)
     {
       Provider.of<WeatherFetch>(context, listen: false).fetchData
       (
@@ -109,7 +109,10 @@ _appbar(con)
     toolbarHeight: 82,
     backgroundColor: Colors.transparent,    
     elevation: 0,
-    leading: IconButton(onPressed: (){}, icon: Icon(Icons.bookmark_border_outlined,color: Styles.whiteColor)),
+    leading: IconButton(onPressed: ()
+    {
+    },
+    icon: Icon(Icons.bookmark_border_outlined,color: Styles.whiteColor)),
     actions:
     [
       Column
