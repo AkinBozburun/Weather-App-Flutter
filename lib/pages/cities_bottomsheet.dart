@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +10,11 @@ class CitySheetWithButton extends StatelessWidget
   const CitySheetWithButton({Key? key}) : super(key: key);  
 
   @override
-  Widget build(BuildContext context)
-  {
-    return IconButton
-    (
-      onPressed: () => bottomSheet(context),
-      icon: Icon(Icons.keyboard_arrow_down_rounded,color: Styles.whiteColor)
-    );
-  }
+  Widget build(BuildContext context) => IconButton
+  (
+    onPressed: () => bottomSheet(context),
+    icon: Icon(Icons.keyboard_arrow_down_rounded,color: Styles.whiteColor)
+  );
 }
 
 bottomSheet(context)
@@ -111,11 +109,23 @@ _searchBar(context)
   );
 }
 
+_saveToBox(city,country,lat,long) async
+{    
+  final box = await Hive.openBox('initialCity');
+  box.put("City",
+  {
+    "city" : city,
+    "country" : country,
+    "lat" : lat,
+    "long" : long,
+  });
+  print(box.get("City"));
+}
+
 _sehirList(context)
 {
   final prov = Provider.of<WeatherFetch>(context);
   final prov2 = Provider.of<VisualProvider>(context);
-  
 
   return Container
   (
@@ -133,6 +143,8 @@ _sehirList(context)
         (
           onTap: ()
           {
+            _saveToBox(prov.citySearchList[index].city, turkeyCheck,
+            prov.citySearchList[index].lati, prov.citySearchList[index].long);
             prov.fetchData(prov.citySearchList[index].city, turkeyCheck,
             prov.citySearchList[index].lati, prov.citySearchList[index].long);
             prov2.clearText();
@@ -150,25 +162,27 @@ _sehirList(context)
 
 _favs()
 {
+  List favList =["Ataevler","Abbasağa","Yeni Mahalle","Suadiye"];
+
   return Column
   (
-    mainAxisAlignment: MainAxisAlignment.center,
     children:
     [
       Row(children: [Icon(Icons.bookmark_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
       style: Styles().bottomSheetText2)]),
+      SizedBox(height: 16),
       Container
       (
-        height: 72,
+        height: 48,
         child: ListView.builder
         (
           scrollDirection: Axis.horizontal,
-          itemCount: 6,
+          itemCount: favList.length,
           itemBuilder: (context, index) => Container
           (
-            margin: const EdgeInsets.only(top: 16,right: 16),            
-            width: 81,
-            child: Center(child: Text("Ataevler",style: Styles().favsText)),
+            margin: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(child: Text(favList[index],style: Styles().favsText)),
             decoration: BoxDecoration
             (
               color: Styles.softGreyColor,

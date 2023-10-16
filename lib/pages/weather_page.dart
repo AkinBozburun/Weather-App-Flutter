@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/pages/cities_bottomsheet.dart';
-import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/fl_chart.dart';
 import 'package:my_weather_app/utils/icon_image_kontrol.dart';
 import 'package:my_weather_app/utils/styles.dart';
@@ -24,19 +24,22 @@ class _WeatherPageState extends State<WeatherPage>
   {
     Provider.of<WeatherFetch>(context,listen: false).cityListFetch();
 
-    final sehirListesi = await SehirlerDAO().sehirOku();
+    final box = await Hive.openBox("initialCity");
 
-    if(sehirListesi.isNotEmpty)
+    if(box.isOpen)
     {
-      final sehir = sehirListesi.last;
-      Provider.of<WeatherFetch>(context, listen: false)
-      .fetchData(sehir.sehirAd, sehir.ulkeAd, sehir.lat, sehir.long);
+      Provider.of<WeatherFetch>(context, listen: false).fetchData
+      (
+        box.get("City")["city"],
+        box.get("City")["country"],
+        box.get("City")["lat"],
+        box.get("City")["long"],
+      );
     }
     else
     {
       Future.delayed(Duration(milliseconds: 100)).then((value) => bottomSheet(context));
-    }
-    
+    }    
   }
 
   @override

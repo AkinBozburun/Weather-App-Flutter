@@ -43,9 +43,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^6.0.0
 
+  hive:
+  hive_flutter:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  hive_generator:
+  build_runner:
 
 
   flutter_launcher_icons:
