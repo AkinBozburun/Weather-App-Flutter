@@ -112,6 +112,7 @@ _appbar(con)
       Column
       (
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children:
         [
           Text(prov.sehirText.toString(), style: GoogleFonts.inter(textStyle: TextStyle
