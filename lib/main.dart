@@ -18,6 +18,7 @@ void main() async
 
   await Hive.initFlutter();
   Hive.registerAdapter(FavCitiesAdapter());
+  Hive.openBox<FavCities>("favCities");
 
   runApp(MyApp());
 }
@@ -38,7 +39,6 @@ class MyApp extends StatelessWidget
       (
         title: 'My Weather',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(useMaterial3: true),
         home: WeatherPage(),
       ),
     );

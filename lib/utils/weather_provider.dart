@@ -4,21 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_weather_app/models/sehirler.dart';
 import 'package:my_weather_app/models/weather_model.dart';
-import 'package:my_weather_app/utils/db_dao.dart';
 import 'package:my_weather_app/utils/styles.dart';
 
 class WeatherFetch extends ChangeNotifier
 {
-  Future<void> sehirSil(i) async
-  {
-    await SehirlerDAO().sehirSil(i);
-    notifyListeners();
-    print("silindi");
-  }
-
   List<Hourly> hourlyData = [];
 
   List<FlSpot> spots = [];
@@ -41,8 +34,6 @@ class WeatherFetch extends ChangeNotifier
 
   double lat = 0.0;
   double long = 0.0;
-
-  bool konumkontrolcu = false;
 
   izinKontrol() async
   {
@@ -82,7 +73,6 @@ class WeatherFetch extends ChangeNotifier
     }
     else
     {
-      konumkontrolcu = true;
       _konumAl();
     }
   }
@@ -102,14 +92,15 @@ class WeatherFetch extends ChangeNotifier
   {
     String havaDurumuAPI =
       "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$long&appid=f5aac4a1dc5827bf0daf0d1cdee290b1&units=metric&lang=tr";
-    sehirText = sehirDB == "" ? "Anlık" : sehirDB;
-    ulkeText = sehirDB == "" ? "(Konum)" : ulkeDB;
+    sehirText = sehirDB;
+    ulkeText = ulkeDB;
     havaDurumuAl(havaDurumuAPI);
     spots = [];
     foreFuture = forecast(havaDurumuAPI);
+    _saveToBox(sehirDB, ulkeDB, lat, long);
   }
 
-  Future<void> havaDurumuAl(String api) async
+  havaDurumuAl(String api) async
   {
     var jsonData = await http.get(Uri.parse(api));
 
@@ -121,7 +112,8 @@ class WeatherFetch extends ChangeNotifier
     _dataYakala(gunlukTemps);
   }
 
-  _dataYakala(jsonTemp) {
+  _dataYakala(jsonTemp)
+  {
     derece = jsonTemp.temp;
     hissedilen = jsonTemp.feels;
     nem = jsonTemp.nem;
@@ -131,7 +123,8 @@ class WeatherFetch extends ChangeNotifier
     notifyListeners();
   }
 
-  fontRenkKontrol() {
+  fontRenkKontrol()
+  {
     if (icon == "13d" || icon == "13n") {
       return Styles.blackColor;
     } else {
@@ -139,7 +132,8 @@ class WeatherFetch extends ChangeNotifier
     }
   }
 
-  panelRenkKontrol() {
+  panelRenkKontrol()
+  {
     if (icon == "13d" || icon == "13n") {
       return Colors.black12;
     } else {
@@ -169,8 +163,8 @@ class WeatherFetch extends ChangeNotifier
     notifyListeners();
   }
 
-  List<Cities> cityList = [];
-  List<Cities> citySearchList = [];
+  List<Locations> cityList = [];
+  List<Locations> citySearchList = [];
 
   cityListFetch() async
   {
@@ -189,7 +183,7 @@ class WeatherFetch extends ChangeNotifier
     {
       for(var cityData in data)
       {
-        cityList.add(Cities.fromjson(cityData));
+        cityList.add(Locations.fromjson(cityData));
       }
     }
     citySearchList = cityList;
@@ -203,7 +197,17 @@ class WeatherFetch extends ChangeNotifier
     notifyListeners();    
   }
 
-
+  _saveToBox(city,country,lat,long) async
+  {    
+    final box = await Hive.openBox('initialCity');
+    box.put("City",
+    {
+      "city" : city,
+      "country" : country,
+      "lat" : lat,
+      "long" : long,
+    });
+  }
 }
 
 class VisualProvider extends ChangeNotifier

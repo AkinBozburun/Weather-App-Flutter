@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_weather_app/models/fav_cities_model.dart';
 import 'package:my_weather_app/utils/get_box.dart';
 import 'package:my_weather_app/utils/styles.dart';
@@ -23,12 +22,6 @@ bottomSheet(context)
 {
   final provider = Provider.of<VisualProvider>(context,listen: false);
   final double height = MediaQuery.of(context).size.height;
-
-  if(!Hive.isBoxOpen("favCities"))
-  {
-    Hive.openBox<FavCities>("favCities");
-    print("fav liste açıldı");
-  }
 
   showModalBottomSheet
   (
@@ -55,10 +48,7 @@ bottomSheet(context)
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,
-    shape: RoundedRectangleBorder
-    (
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16))
-    )
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
   );
 }
 
@@ -109,7 +99,7 @@ _searchBar(context)
         child: Ink
         (
           height: 46, width: 46,
-          child: Center(child: Icon(Icons.gps_fixed_rounded)),
+          child: Center(child: Icon(Icons.gps_fixed_rounded,color: Styles.blackColor)),
           decoration: BoxDecoration
           (
             color: Styles.softGreyColor,
@@ -119,19 +109,6 @@ _searchBar(context)
       ),
     ],
   );
-}
-
-_saveToBox(city,country,lat,long) async
-{    
-  final box = await Hive.openBox('initialCity');
-  box.put("City",
-  {
-    "city" : city,
-    "country" : country,
-    "lat" : lat,
-    "long" : long,
-  });
-  print(box.get("City"));
 }
 
 _sehirList(context)
@@ -155,8 +132,6 @@ _sehirList(context)
         (
           onTap: ()
           {
-            _saveToBox(prov.citySearchList[index].city, turkeyCheck,
-            prov.citySearchList[index].lati, prov.citySearchList[index].long);
             prov.fetchData(prov.citySearchList[index].city, turkeyCheck,
             prov.citySearchList[index].lati, prov.citySearchList[index].long);
             prov2.clearText();
@@ -182,8 +157,11 @@ _favs()
   (
     children:
     [
-      Row(children: [Icon(Icons.bookmark_rounded),SizedBox(width: 8), Text("Kayıtlı Konumlar",
-      style: Styles().bottomSheetText2)]),
+      Row(children:
+      [
+        Icon(Icons.bookmark_rounded,color: Styles.blackColor),
+        SizedBox(width: 8), Text("Kayıtlı Konumlar", style: Styles().bottomSheetText2)
+      ]),
       SizedBox(height: 16),
       boxList.isNotEmpty? Container
       (
@@ -204,7 +182,7 @@ _favs()
             ),
           ),
         ),
-      )  : Center(child: CircularProgressIndicator(color: Styles.blackColor)),
+      ) : Text("Favori buraya konumlarınızı ekleyebilirsiniz",style: Styles().favsText),
     ],
   );
 }

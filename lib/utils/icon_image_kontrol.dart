@@ -163,7 +163,7 @@ class DataControl
     }
   }
 
-  backGroundCheck(gelenIcon,gelenH,gelenW)
+  backGroundCheck(gelenIcon,gelenH,gelenW,pageView)
   {
     switch(gelenIcon)
     {
@@ -186,6 +186,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
 
       case "02d" : //parçalı bulut
@@ -208,6 +209,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,        
       );
 
       case "03d" : //Bulutlu
@@ -230,6 +232,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
 
       case "04d" : //Parçalı Bulutlu
@@ -251,6 +254,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
 
       case "09d" : //Sağnak Yağmur
@@ -273,6 +277,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
 
       case "10d" : //Orta Yağmur
@@ -296,6 +301,7 @@ class DataControl
             end: Alignment.topCenter,
           ),
         ),
+        child: pageView,
       );
 
       case "11d" : //Fırtına
@@ -319,6 +325,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
 
       case "13d" : //Kar Yağışlı
@@ -341,6 +348,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
 
       case "50d" : //Sisli
@@ -362,6 +370,7 @@ class DataControl
             end: Alignment.topRight,
           ),
         ),
+        child: pageView,
       );
       default : return Container(width: gelenW,height: gelenH, color: Colors.white);
     }

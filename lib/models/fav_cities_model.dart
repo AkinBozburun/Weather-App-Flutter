@@ -6,17 +6,14 @@ part 'fav_cities_model.g.dart';
 class FavCities extends HiveObject
 {
   @HiveField(0)
-  late int favCityID;
-
-  @HiveField(1)
   late String favCityName;
 
-  @HiveField(2)
+  @HiveField(1)
   late String favCityCountry;
 
-  @HiveField(3)
+  @HiveField(2)
   late String favCityLat;
 
-  @HiveField(4)
+  @HiveField(3)
   late String favCityLong;
 }

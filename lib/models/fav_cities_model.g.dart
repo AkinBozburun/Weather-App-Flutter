@@ -17,26 +17,23 @@ class FavCitiesAdapter extends TypeAdapter<FavCities> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FavCities()
-      ..favCityID = fields[0] as int
-      ..favCityName = fields[1] as String
-      ..favCityCountry = fields[2] as String
-      ..favCityLat = fields[3] as String
-      ..favCityLong = fields[4] as String;
+      ..favCityName = fields[0] as String
+      ..favCityCountry = fields[1] as String
+      ..favCityLat = fields[2] as String
+      ..favCityLong = fields[3] as String;
   }
 
   @override
   void write(BinaryWriter writer, FavCities obj) {
     writer
-      ..writeByte(5)
-      ..writeByte(0)
-      ..write(obj.favCityID)
-      ..writeByte(1)
-      ..write(obj.favCityName)
-      ..writeByte(2)
-      ..write(obj.favCityCountry)
-      ..writeByte(3)
-      ..write(obj.favCityLat)
       ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.favCityName)
+      ..writeByte(1)
+      ..write(obj.favCityCountry)
+      ..writeByte(2)
+      ..write(obj.favCityLat)
+      ..writeByte(3)
       ..write(obj.favCityLong);
   }
 
