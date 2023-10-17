@@ -134,24 +134,29 @@ _page1(con)
 {
   final prov = Provider.of<WeatherFetch>(con);
 
+  String capitilized(text)
+  => text[0].toString().toUpperCase()+text.toString().substring(1).toLowerCase();
+
   return Column
   (
     mainAxisAlignment: MainAxisAlignment.center,
     children:
     [
+      SizedBox(height: 24),
       DataControl().iconCheck(prov.icon,true),
-      SizedBox(height: 48),
+      SizedBox(height: 36),
       Container
       (
-        padding: const EdgeInsets.all(20),
         height: MediaQuery.of(con).size.height * 0.45,
-        width: MediaQuery.of(con).size.width * 0.9,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration
         (
           color: prov.panelRenkKontrol(),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white30)),
-          child: Column(
+          border: Border.all(color: Colors.white30)
+        ),
+        child: Column
+        (          
           mainAxisAlignment: MainAxisAlignment.center,
           children:
           [
@@ -159,28 +164,31 @@ _page1(con)
             (
               children:
               [
-                Text(prov.aciklama.toString(),
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            color: prov.fontRenkKontrol()))),
+                Text(capitilized(prov.aciklama),
+                style: GoogleFonts.inter(textStyle: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: prov.fontRenkKontrol()))),
+                SizedBox(height: 6),
                 Text("${prov.derece?.toInt()} \u2103",
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 48,
-                            color: prov.fontRenkKontrol(),
-                            fontWeight: FontWeight.bold))),
-                Divider(
-                    color: prov.fontRenkKontrol(),
-                    thickness: 0.7,
-                    indent: 30,
-                    endIndent: 30)
+                style: GoogleFonts.inter(textStyle: TextStyle(
+                  fontSize: 48,
+                  color: prov.fontRenkKontrol(),
+                  fontWeight: FontWeight.bold))),
               ],
             ),
-            SizedBox
+            SizedBox(height: 8),
+            Divider
             (
-              width: 280,
+              color: prov.fontRenkKontrol(),
+              thickness: 0.7,
+              indent: 30,
+              endIndent: 30
+            ),
+            SizedBox(height: 8),
+            Container //Details
+            (
+              margin: const EdgeInsets.symmetric(horizontal: 32),
               child: Column
               (
                 children:
@@ -236,7 +244,8 @@ _page1(con)
             ),
           ],
         ),
-    )],
+      )
+    ],
   );
 }
 
@@ -321,7 +330,8 @@ _page2(con)
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration
                         (
-                          color: providerWeather.panelRenkKontrol(),borderRadius: BorderRadius.circular(24)
+                          color: providerWeather.panelRenkKontrol(),
+                          borderRadius: BorderRadius.circular(24)
                         ),
                         child: Column
                         (
@@ -433,12 +443,12 @@ _hourly(switchIcon,con)
             Text
             (
               time(prov.hourlyData[index].time),
-              style: Styles().hourlyForecastText,
+              style: Styles().hourlyForecastListText,
             ),
             Row(children:
             [
               Text(prov.hourlyData[index].temp.toInt().toString()+"°",
-              style: Styles().hourlyForecastText),
+              style: Styles().hourlyForecastListText),
               SizedBox(width: 8),
               SizedBox //Icon
               (
@@ -450,7 +460,7 @@ _hourly(switchIcon,con)
             SizedBox
             (
               width: 80,
-              child: Text(prov.hourlyData[index].describtion,style: Styles().hourlyForecastText,textAlign: TextAlign.end),
+              child: Text(prov.hourlyData[index].describtion,style: Styles().hourlyForecastListText,textAlign: TextAlign.end),
             ),
           ]
         ),

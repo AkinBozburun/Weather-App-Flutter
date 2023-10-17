@@ -36,7 +36,7 @@ class FLChart extends StatelessWidget {
               tooltipBgColor: Colors.black45,
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                 return touchedBarSpots.map((barSpot) {
-                  return LineTooltipItem("${barSpot.y.toInt()} \u2103",Styles().hourlyForecastText);
+                  return LineTooltipItem("${barSpot.y.toInt()} \u2103",Styles().hourlyForecastChartText);
                 }).toList();
               },
             ),
@@ -59,7 +59,7 @@ class FLChart extends StatelessWidget {
   getTitleData() => FlTitlesData(
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (context, value) => Styles().hourlyForecastText,
+          getTextStyles: (context, value) => Styles().hourlyForecastChartText,
           getTitles: (value) {
             for (int i = 0; i < 24; i++) {
               if (value == i)
