@@ -16,6 +16,8 @@ class WeatherFetch extends ChangeNotifier
 
   List<FlSpot> spots = [];
 
+  List<Daily> dailyData = [];
+
   double y = 0;
 
   var derece;
@@ -30,10 +32,8 @@ class WeatherFetch extends ChangeNotifier
 
   int sayac = 0;
 
-  Future<DailyList>? foreFuture;
-
   double lat = 0.0;
-  double long = 0.0;
+  double long = 0.0;  
 
   izinKontrol() async
   {
@@ -94,25 +94,21 @@ class WeatherFetch extends ChangeNotifier
       "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$long&appid=f5aac4a1dc5827bf0daf0d1cdee290b1&units=metric&lang=tr";
     sehirText = sehirDB;
     ulkeText = ulkeDB;
-    havaDurumuAl(havaDurumuAPI);
-    spots = [];
-    foreFuture = forecast(havaDurumuAPI);
+    spots = [];    
+    _havaDurumuAl(havaDurumuAPI);
     _saveToBox(sehirDB, ulkeDB, lat, long);
   }
 
-  havaDurumuAl(String api) async
+  _havaDurumuAl(String api) async
   {
     var jsonData = await http.get(Uri.parse(api));
-
-    sayac++;
-    print(sayac);
-
     var gunlukTemps = DailyList.fromjson(json.decode(jsonData.body));
 
-    _dataYakala(gunlukTemps);
+    _currentDataSet(gunlukTemps);
+    _hourlyDailyDataAddList(gunlukTemps);
   }
 
-  _dataYakala(jsonTemp)
+  _currentDataSet(jsonTemp)
   {
     derece = jsonTemp.temp;
     hissedilen = jsonTemp.feels;
@@ -123,43 +119,17 @@ class WeatherFetch extends ChangeNotifier
     notifyListeners();
   }
 
-  fontRenkKontrol()
+  _hourlyDailyDataAddList(jsonTemp) //24 saatlik tahminler Grafik ve Tablo
   {
-    if (icon == "13d" || icon == "13n") {
-      return Styles.blackColor;
-    } else {
-      return Styles.whiteColor;
-    }
-  }
-
-  panelRenkKontrol()
-  {
-    if (icon == "13d" || icon == "13n") {
-      return Colors.black12;
-    } else {
-      return Colors.white10;
-    }
-  }
-
-  Future<DailyList> forecast(String api) async
-  {
-    var jsonData = await http.get(Uri.parse(api));
-    sayac++;
-    print(sayac);
-    var foreTemps = DailyList.fromjson(json.decode(jsonData.body));
-    _forecastDataYakala(foreTemps);
-    return foreTemps;
-  }
-
-  _forecastDataYakala(jsonTemp) //Günlük tahminler Grafik ve Tablo
-  {
+    dailyData = jsonTemp.dayTemps;
     hourlyData = jsonTemp.hourTemps;
+
     for (int i = 0; i < 24; i++)
     {
       y = hourlyData[i].temp.toDouble();
       spots.add(FlSpot(i.toDouble(), y));
       i++;
-    }
+    }    
     notifyListeners();
   }
 
@@ -207,6 +177,23 @@ class WeatherFetch extends ChangeNotifier
       "lat" : lat,
       "long" : long,
     });
+  }
+
+  fontRenkKontrol()
+  {
+    if (icon == "13d" || icon == "13n") {
+      return Styles.blackColor;
+    } else {
+      return Styles.whiteColor;
+    }
+  }
+  panelRenkKontrol()
+  {
+    if (icon == "13d" || icon == "13n") {
+      return Colors.black12;
+    } else {
+      return Colors.white10;
+    }
   }
 }
 

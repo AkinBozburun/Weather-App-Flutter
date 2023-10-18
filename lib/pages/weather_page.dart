@@ -4,7 +4,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/pages/cities_bottomsheet.dart';
 import 'package:my_weather_app/utils/fl_chart.dart';
 import 'package:my_weather_app/utils/icon_image_kontrol.dart';
@@ -93,17 +92,27 @@ class _WeatherPageState extends State<WeatherPage>
   }
 }
 
-_appbar(con)
+_favsButton(context)
 {
-  final prov = Provider.of<WeatherFetch>(con);
+  final provider = Provider.of<WeatherFetch>(context);
+
+  return IconButton
+  (
+    onPressed: (){},
+    icon: Icon(Icons.bookmark_border_outlined,color: Styles.whiteColor),
+  );
+}
+
+_appbar(context)
+{
+  final prov = Provider.of<WeatherFetch>(context);
 
   return AppBar
   (
     toolbarHeight: 82,
     backgroundColor: Colors.transparent,    
     elevation: 0,
-    leading: IconButton(onPressed: (){},
-    icon: Icon(Icons.bookmark_border_outlined,color: Styles.whiteColor)),
+    leading: _favsButton(context),
     actions:
     [
       Column
@@ -309,70 +318,58 @@ _page2(con)
           (
             height: MediaQuery.of(con).size.height * 0.25,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: FutureBuilder<DailyList>
+            child: ListView.builder
             (
-              future: providerWeather.foreFuture,
-              builder: (context, snap)
+              scrollDirection: Axis.horizontal,
+              itemCount: 8,
+              itemBuilder: (con, i)
               {
-                if (snap.hasData)
-                {
-                  var list = snap.data!.dayTemps;
-                  return ListView.builder
+                if (i == 0) return Center();
+                return Container
+                (
+                  width: MediaQuery.of(con).size.width * 0.26,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration
                   (
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 8,
-                    itemBuilder: (con, i)
-                    {
-                      if (i == 0) return Center();
-                      return Container
+                    color: providerWeather.panelRenkKontrol(),
+                    borderRadius: BorderRadius.circular(24)
+                  ),
+                  child: Column
+                  (
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                    [
+                      Text
                       (
-                        width: MediaQuery.of(con).size.width * 0.26,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration
+                        DateFormat.EEEE().format(DateTime.fromMillisecondsSinceEpoch(
+                          providerWeather.dailyData[i].time * 1000)),
+                        style: GoogleFonts.inter(textStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: providerWeather.fontRenkKontrol()))
+                      ),
+                      div,
+                      SizedBox
+                      (
+                        height:
+                        MediaQuery.of(con).size.height * 0.1 > 80 ? 80 :
+                        MediaQuery.of(con).size.height * 0.1,
+                        child: DataControl().iconCheck(providerWeather.dailyData[i].icon,false),
+                      ),
+                      div,
+                      Text
+                      (
+                        "${providerWeather.dailyData[i].day.toInt()}\u00b0 / ${providerWeather.dailyData[i].night.toInt()}\u00b0",
+                        style: GoogleFonts.inter(textStyle: TextStyle
                         (
-                          color: providerWeather.panelRenkKontrol(),
-                          borderRadius: BorderRadius.circular(24)
-                        ),
-                        child: Column
-                        (
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:
-                          [
-                            Text
-                            (
-                              DateFormat.EEEE().format(DateTime.fromMillisecondsSinceEpoch(
-                                list[i].time * 1000)),
-                              style: GoogleFonts.inter(textStyle: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: providerWeather.fontRenkKontrol()))
-                            ),
-                            div,
-                            SizedBox
-                            (
-                              height:
-                              MediaQuery.of(con).size.height * 0.1 > 80 ? 80 :
-                              MediaQuery.of(con).size.height * 0.1,
-                              child: DataControl().iconCheck(list[i].icon,false),
-                            ),
-                            div,
-                            Text
-                            (
-                              "${list[i].day.toInt()}\u00b0 / ${list[i].night.toInt()}\u00b0",
-                              style: GoogleFonts.inter(textStyle: TextStyle
-                              (
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: providerWeather.fontRenkKontrol()
-                              )),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                }
-                return Center(child: CircularProgressIndicator(color: Styles.whiteColor));
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: providerWeather.fontRenkKontrol()
+                        )),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ),
