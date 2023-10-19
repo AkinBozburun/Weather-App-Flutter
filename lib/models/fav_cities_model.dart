@@ -12,8 +12,8 @@ class FavCities extends HiveObject
   late String favCityCountry;
 
   @HiveField(2)
-  late String favCityLat;
+  late double favCityLat;
 
   @HiveField(3)
-  late String favCityLong;
+  late double favCityLong;
 }

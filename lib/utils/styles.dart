@@ -11,6 +11,9 @@ class Styles
   final hourlyForecastListText = GoogleFonts.inter(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500);
   final hourlyForecastChartText = GoogleFonts.inter(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w600);
   
+  final alertTitle = GoogleFonts.inter(fontSize: 18, color: blackColor, fontWeight: FontWeight.w600);
+  final alertButtonText = GoogleFonts.inter(fontSize: 14, color: blackColor, fontWeight: FontWeight.w600);
+
   final bottomSheetText1 = GoogleFonts.inter(fontSize: 16, color: blackColor, fontWeight: FontWeight.w500);
   final bottomSheetText2 = GoogleFonts.inter(fontSize: 18, color: blackColor, fontWeight: FontWeight.w600);
 

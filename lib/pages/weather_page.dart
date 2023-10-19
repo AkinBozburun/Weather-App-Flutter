@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_weather_app/models/fav_cities_model.dart';
 import 'package:my_weather_app/pages/cities_bottomsheet.dart';
 import 'package:my_weather_app/utils/fl_chart.dart';
+import 'package:my_weather_app/utils/get_box.dart';
 import 'package:my_weather_app/utils/icon_image_kontrol.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
@@ -95,11 +98,96 @@ class _WeatherPageState extends State<WeatherPage>
 _favsButton(context)
 {
   final provider = Provider.of<WeatherFetch>(context);
+  final textController = TextEditingController(text: provider.sehirText);
+  final favBox = Boxes.getFavs();
+
+  _addToFavsBoxList()
+  {
+    final box = Boxes.getFavs();
+
+    final favs = FavCities()
+    ..favCityName = textController.text
+    ..favCityCountry = provider.ulkeText!
+    ..favCityLat = provider.lat
+    ..favCityLong = provider.long;
+
+    box.put(textController.text, favs);
+
+    print(box.length);
+  }
 
   return IconButton
   (
-    onPressed: (){},
-    icon: Icon(Icons.bookmark_border_outlined,color: Styles.whiteColor),
+    onPressed:()
+    {
+      if(favBox.containsKey(provider.lat))
+      {
+        print("var");
+      }
+      else
+      {
+        print("yok");
+      }
+    },
+    //showDialog
+    //(
+    //  context: context,
+    //  builder: (context) => AlertDialog
+    //  (
+    //    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    //    title: Text("Konum Kaydet",style: Styles().alertTitle),
+    //    content: Container
+    //    (
+    //      child: TextField
+    //      (
+    //        decoration: InputDecoration
+    //        (
+    //          enabledBorder: UnderlineInputBorder
+    //          (                  
+    //            borderSide: BorderSide(color: Styles.softGreyColor),   
+    //          ),
+    //          focusedBorder: UnderlineInputBorder
+    //          (
+    //            borderSide: BorderSide(color: Styles.softGreyColor),
+    //          ),
+    //        ),
+    //        controller: textController,
+    //        onChanged: (value){},            
+    //      ),
+    //    ),
+    //    actions:
+    //    [
+    //      InkWell
+    //      (
+    //        borderRadius: BorderRadius.circular(24),
+    //        onTap: ()
+    //        {
+    //          if(textController.text != "")
+    //          {
+    //            _addToFavsBoxList();
+    //            Navigator.pop(context);
+    //            print(textController.text);
+    //          }
+    //        },
+    //        child: Ink
+    //        (
+    //          height: 48,
+    //          width: 96,
+    //          child: Center(child: Text("kaydet",style: Styles().alertButtonText)),
+    //          decoration: BoxDecoration
+    //          (
+    //            color: Styles.softGreyColor,
+    //            borderRadius: BorderRadius.circular(24),
+    //          ),
+    //        ),
+    //      ),
+    //    ],
+    //  ),
+    //),
+    icon: Icon
+    (
+      Icons.bookmark_border_rounded
+      ,color: Styles.whiteColor),
   );
 }
 
@@ -134,7 +222,8 @@ _appbar(context)
             color: prov.fontRenkKontrol()
           ))),
         ],
-      ),CitySheetWithButton()
+      ),
+      CitySheetWithButton(),
     ],
   );
 }

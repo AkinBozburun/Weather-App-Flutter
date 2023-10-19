@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_weather_app/models/sehirler.dart';
 import 'package:my_weather_app/models/weather_model.dart';
+import 'package:my_weather_app/utils/get_box.dart';
 import 'package:my_weather_app/utils/styles.dart';
 
 class WeatherFetch extends ChangeNotifier
@@ -177,6 +178,13 @@ class WeatherFetch extends ChangeNotifier
       "lat" : lat,
       "long" : long,
     });
+  }
+
+  deleteItemFromFavsBox(index)
+  {
+    final box = Boxes.getFavs();
+    box.deleteAt(index);
+    notifyListeners();
   }
 
   fontRenkKontrol()

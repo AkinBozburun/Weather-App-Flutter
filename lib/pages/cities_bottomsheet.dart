@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_weather_app/models/fav_cities_model.dart';
 import 'package:my_weather_app/utils/get_box.dart';
 import 'package:my_weather_app/utils/styles.dart';
 import 'package:my_weather_app/utils/weather_provider.dart';
@@ -40,7 +39,7 @@ bottomSheet(context)
           provider.textCheck == "" ?
           Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(), 
           SizedBox(height: 16),
-          provider.textCheck == "" ? _favs() : _sehirList(context),
+          provider.textCheck == "" ? _favs(context) : _sehirList(context),
         ],
       ),
     ),
@@ -86,7 +85,7 @@ _searchBar(context)
               providerWeather.citySearch(value);
             },            
           ),
-        ),        
+        ),
       ),
       InkWell //Location Button
       (
@@ -147,11 +146,11 @@ _sehirList(context)
   );
 }
 
-_favs()
+_favs(context)
 {
-  List favList = ["Ataevler","Abbasağa","Yeni Mahalle","Suadiye"];
+  final boxList = Boxes.getFavs().values.toList();
 
-  final boxList = Boxes.getFavs().values.toList().cast<FavCities>();
+  final prov = Provider.of<WeatherFetch>(context,listen: false);
 
   return Column
   (
@@ -166,21 +165,32 @@ _favs()
       boxList.isNotEmpty? Container
       (
         height: 48,
-        child: ListView.builder
+        child: ListView.separated
         (
           scrollDirection: Axis.horizontal,
-          itemCount: favList.length,
-          itemBuilder: (context, index) => Container
+          itemCount: boxList.length,
+          itemBuilder: (context, index) => InkWell
           (
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Center(child: Text(favList[index],style: Styles().favsText)),
-            decoration: BoxDecoration
+            borderRadius: BorderRadius.circular(12),
+            onTap: () 
+            {
+              prov.fetchData(boxList[index].favCityName, boxList[index].favCityCountry,
+              boxList[index].favCityLat.toString(), boxList[index].favCityLong.toString());
+              Navigator.pop(context);
+            },
+            onLongPress: () => prov.deleteItemFromFavsBox(index),
+            child: Ink
             (
-              color: Styles.softGreyColor,
-              borderRadius: BorderRadius.circular(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Center(child: Text(boxList[index].favCityName,style: Styles().favsText)),
+              decoration: BoxDecoration
+              (
+                color: Styles.softGreyColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
+          separatorBuilder: (context, index) => SizedBox(width: 16),
         ),
       ) : Text("Favori buraya konumlarınızı ekleyebilirsiniz",style: Styles().favsText),
     ],
