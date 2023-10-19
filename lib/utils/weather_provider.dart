@@ -30,11 +30,8 @@ class WeatherFetch extends ChangeNotifier
 
   String? sehirText;
   String? ulkeText;
-
-  int sayac = 0;
-
-  double lat = 0.0;
-  double long = 0.0;  
+  String? konumLat;
+  String? konumLong;
 
   izinKontrol() async
   {
@@ -95,6 +92,8 @@ class WeatherFetch extends ChangeNotifier
       "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$long&appid=f5aac4a1dc5827bf0daf0d1cdee290b1&units=metric&lang=tr";
     sehirText = sehirDB;
     ulkeText = ulkeDB;
+    konumLat = lat;
+    konumLong = long;
     spots = [];    
     _havaDurumuAl(havaDurumuAPI);
     _saveToBox(sehirDB, ulkeDB, lat, long);
@@ -180,10 +179,29 @@ class WeatherFetch extends ChangeNotifier
     });
   }
 
-  deleteItemFromFavsBox(index)
+  bool isAdded = false;
+
+  favIconCheck()
+  {
+    final favBox = Boxes.getFavs();
+
+    if(favBox.containsKey(konumLat))
+    {
+      isAdded = true;
+      return Icons.bookmark_rounded;
+    }
+    else
+    {
+      isAdded = false;
+      return Icons.bookmark_border_rounded;
+    }    
+  }
+
+  deleteItemFromFavsBox(int index,String key,int iconOrList)
   {
     final box = Boxes.getFavs();
-    box.deleteAt(index);
+    if(iconOrList == 0) box.deleteAt(index);
+    if(iconOrList == 1) box.delete(key);
     notifyListeners();
   }
 

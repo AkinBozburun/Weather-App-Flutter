@@ -99,7 +99,6 @@ _favsButton(context)
 {
   final provider = Provider.of<WeatherFetch>(context);
   final textController = TextEditingController(text: provider.sehirText);
-  final favBox = Boxes.getFavs();
 
   _addToFavsBoxList()
   {
@@ -108,86 +107,106 @@ _favsButton(context)
     final favs = FavCities()
     ..favCityName = textController.text
     ..favCityCountry = provider.ulkeText!
-    ..favCityLat = provider.lat
-    ..favCityLong = provider.long;
+    ..favCityLat = provider.konumLat!
+    ..favCityLong = provider.konumLong!;
 
-    box.put(textController.text, favs);
-
-    print(box.length);
+    box.put(provider.konumLat, favs);
   }
 
   return IconButton
   (
-    onPressed:()
-    {
-      if(favBox.containsKey(provider.lat))
-      {
-        print("var");
-      }
-      else
-      {
-        print("yok");
-      }
-    },
-    //showDialog
-    //(
-    //  context: context,
-    //  builder: (context) => AlertDialog
-    //  (
-    //    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    //    title: Text("Konum Kaydet",style: Styles().alertTitle),
-    //    content: Container
-    //    (
-    //      child: TextField
-    //      (
-    //        decoration: InputDecoration
-    //        (
-    //          enabledBorder: UnderlineInputBorder
-    //          (                  
-    //            borderSide: BorderSide(color: Styles.softGreyColor),   
-    //          ),
-    //          focusedBorder: UnderlineInputBorder
-    //          (
-    //            borderSide: BorderSide(color: Styles.softGreyColor),
-    //          ),
-    //        ),
-    //        controller: textController,
-    //        onChanged: (value){},            
-    //      ),
-    //    ),
-    //    actions:
-    //    [
-    //      InkWell
-    //      (
-    //        borderRadius: BorderRadius.circular(24),
-    //        onTap: ()
-    //        {
-    //          if(textController.text != "")
-    //          {
-    //            _addToFavsBoxList();
-    //            Navigator.pop(context);
-    //            print(textController.text);
-    //          }
-    //        },
-    //        child: Ink
-    //        (
-    //          height: 48,
-    //          width: 96,
-    //          child: Center(child: Text("kaydet",style: Styles().alertButtonText)),
-    //          decoration: BoxDecoration
-    //          (
-    //            color: Styles.softGreyColor,
-    //            borderRadius: BorderRadius.circular(24),
-    //          ),
-    //        ),
-    //      ),
-    //    ],
-    //  ),
-    //),
-    icon: Icon
+    onPressed:() => showDialog
     (
-      Icons.bookmark_border_rounded
-      ,color: Styles.whiteColor),
+      context: context,
+      builder: (context)
+      {
+        if(provider.isAdded == false)
+        {
+          return AlertDialog
+          (
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Text("Konum Kaydet",style: Styles().alertTitle),
+            content: Container
+            (
+              child: TextField
+              (
+                decoration: InputDecoration
+                (
+                  enabledBorder: UnderlineInputBorder
+                  (                  
+                    borderSide: BorderSide(color: Styles.softGreyColor),   
+                  ),
+                  focusedBorder: UnderlineInputBorder
+                  (
+                    borderSide: BorderSide(color: Styles.softGreyColor),
+                  ),
+                ),
+                controller: textController,
+                onChanged: (value){},            
+              ),
+            ),
+            actions:
+            [
+              InkWell
+              (
+                borderRadius: BorderRadius.circular(24),
+                onTap: ()
+                {
+                  if(textController.text != "")
+                  {
+                    _addToFavsBoxList();
+                    Navigator.pop(context);
+                    print(textController.text);
+                  }
+                },
+                child: Ink
+                (
+                  height: 48,
+                  width: 96,
+                  child: Center(child: Text("kaydet",style: Styles().alertButtonText)),
+                  decoration: BoxDecoration
+                  (
+                    color: Styles.softGreyColor,
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+        else
+        {
+          return AlertDialog
+          (
+            title: Text("Konumu Kaldır", style: Styles().alertTitle),
+            content: Text("Konum favorilerden kaldırılsın mı?", style: Styles().cityListTextSub),
+            actions:
+            [
+              InkWell
+              (
+                onTap: ()
+                {
+                  provider.deleteItemFromFavsBox(0,provider.konumLat!,1);
+                  Navigator.pop(context);
+                },
+                child: Ink
+                (
+                  height: 48,
+                  width: 128,
+                  child: Center(child: Text("Kaldır",style: Styles().alertButtonText)),
+                  decoration: BoxDecoration
+                  (
+                    color: Styles.softGreyColor,
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+              ),
+            ],
+          ); 
+        }
+      },
+    ),
+    icon: Icon(provider.favIconCheck(), color: provider.fontRenkKontrol()),
   );
 }
 

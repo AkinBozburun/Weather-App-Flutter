@@ -19,8 +19,8 @@ class FavCitiesAdapter extends TypeAdapter<FavCities> {
     return FavCities()
       ..favCityName = fields[0] as String
       ..favCityCountry = fields[1] as String
-      ..favCityLat = fields[2] as double
-      ..favCityLong = fields[3] as double;
+      ..favCityLat = fields[2] as String
+      ..favCityLong = fields[3] as String;
   }
 
   @override

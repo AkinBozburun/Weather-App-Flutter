@@ -178,7 +178,7 @@ _favs(context)
               boxList[index].favCityLat.toString(), boxList[index].favCityLong.toString());
               Navigator.pop(context);
             },
-            onLongPress: () => prov.deleteItemFromFavsBox(index),
+            onLongPress: () => prov.deleteItemFromFavsBox(index,prov.konumLat!,0),
             child: Ink
             (
               padding: const EdgeInsets.symmetric(horizontal: 16),
