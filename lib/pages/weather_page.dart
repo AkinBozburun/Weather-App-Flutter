@@ -111,6 +111,7 @@ _favsButton(context)
     ..favCityLong = provider.konumLong!;
 
     box.put(provider.konumLat, favs);
+    provider.favIconCheck();
   }
 
   return IconButton
@@ -206,7 +207,8 @@ _favsButton(context)
         }
       },
     ),
-    icon: Icon(provider.favIconCheck(), color: provider.fontRenkKontrol()),
+    icon: Icon(provider.isAdded == true ? Icons.bookmark_rounded :
+    Icons.bookmark_outline_rounded, color: provider.fontRenkKontrol()),
   );
 }
 

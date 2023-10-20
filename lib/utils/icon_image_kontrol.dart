@@ -165,12 +165,15 @@ class DataControl
 
   backGroundCheck(gelenIcon,gelenH,gelenW,pageView)
   {
+    Duration dur = const Duration(milliseconds: 400);
+
     switch(gelenIcon)
     {
       case "01d" :  //Açık hava
       case "01n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -191,8 +194,9 @@ class DataControl
 
       case "02d" : //parçalı bulut
       case "02n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -214,8 +218,9 @@ class DataControl
 
       case "03d" : //Bulutlu
       case "03n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -237,8 +242,9 @@ class DataControl
 
       case "04d" : //Parçalı Bulutlu
       case "04n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration:  BoxDecoration
@@ -259,8 +265,9 @@ class DataControl
 
       case "09d" : //Sağnak Yağmur
       case "09n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -282,8 +289,9 @@ class DataControl
 
       case "10d" : //Orta Yağmur
       case "10n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -306,8 +314,9 @@ class DataControl
 
       case "11d" : //Fırtına
       case "11n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -330,8 +339,9 @@ class DataControl
 
       case "13d" : //Kar Yağışlı
       case "13n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: const BoxDecoration
@@ -353,8 +363,9 @@ class DataControl
 
       case "50d" : //Sisli
       case "50n" :
-      return Container
+      return AnimatedContainer
       (
+        duration: dur,
         height: gelenH,
         width: gelenW,
         decoration: BoxDecoration

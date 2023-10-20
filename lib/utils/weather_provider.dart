@@ -94,7 +94,8 @@ class WeatherFetch extends ChangeNotifier
     ulkeText = ulkeDB;
     konumLat = lat;
     konumLong = long;
-    spots = [];    
+    spots = [];
+    favIconCheck();
     _havaDurumuAl(havaDurumuAPI);
     _saveToBox(sehirDB, ulkeDB, lat, long);
   }
@@ -188,12 +189,12 @@ class WeatherFetch extends ChangeNotifier
     if(favBox.containsKey(konumLat))
     {
       isAdded = true;
-      return Icons.bookmark_rounded;
+      notifyListeners();
     }
     else
     {
       isAdded = false;
-      return Icons.bookmark_border_rounded;
+      notifyListeners();
     }    
   }
 
@@ -202,6 +203,7 @@ class WeatherFetch extends ChangeNotifier
     final box = Boxes.getFavs();
     if(iconOrList == 0) box.deleteAt(index);
     if(iconOrList == 1) box.delete(key);
+    favIconCheck();
     notifyListeners();
   }
 
