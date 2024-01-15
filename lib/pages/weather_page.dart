@@ -24,9 +24,9 @@ class _WeatherPageState extends State<WeatherPage>
 {
   _initData() async
   {
-    Provider.of<WeatherFetch>(context,listen: false).cityListFetch();
-
     final box = await Hive.openBox("initialCity");
+
+    Provider.of<WeatherFetch>(context,listen: false).cityListFetch();
 
     if(box.isNotEmpty)
     {
