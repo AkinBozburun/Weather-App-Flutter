@@ -7,9 +7,11 @@ class Styles
   static Color softGreyColor = Color(0xFFE3E3E3);
   static Color blackColor = Color(0xff0E0E0E);
 
-  final hourlyForecastTitle = GoogleFonts.inter(fontSize: 18, color: whiteColor, fontWeight: FontWeight.w600);
-  final hourlyForecastListText = GoogleFonts.inter(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500);
-  final hourlyForecastChartText = GoogleFonts.inter(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w600);
+  final hourlyForecastTitle = TextStyle(fontSize: 18, color: whiteColor, fontWeight: FontWeight.w600);
+  final hourlyForecastListText = TextStyle(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500);
+  final hourlyForecastChartText = TextStyle(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w600);
+  
+  final dailyForecastText = GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w500);
   
   final alertTitle = GoogleFonts.inter(fontSize: 18, color: blackColor, fontWeight: FontWeight.w600);
   final alertButtonText = GoogleFonts.inter(fontSize: 14, color: blackColor, fontWeight: FontWeight.w600);

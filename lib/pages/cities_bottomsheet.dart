@@ -10,44 +10,45 @@ class CitySheetWithButton extends StatelessWidget
   const CitySheetWithButton({Key? key}) : super(key: key);  
 
   @override
-  Widget build(BuildContext context) => IconButton
-  (
-    onPressed: () => bottomSheet(context),
-    icon: Icon(Icons.keyboard_arrow_down_rounded,color: Styles.whiteColor)
-  );
+  Widget build(BuildContext context) => bottomSheet(context);
 }
 
 bottomSheet(context)
 {
   final provider = Provider.of<VisualProvider>(context,listen: false);
+  final iconProv = Provider.of<WeatherFetch>(context);
   final double height = MediaQuery.of(context).size.height;
 
-  showModalBottomSheet
+  return IconButton
   (
-    context: context,
-    builder: (context) => Container
-    (    
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      height: height,
-      child: Column
-      (
-        children:
-        [
-          SizedBox(height: 16),
-          _searchBar(context),
-          SizedBox(height: 16),        
-          provider.textCheck == "" ?
-          Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(), 
-          SizedBox(height: 16),
-          provider.textCheck == "" ? _favs(context) : _sehirList(context),
-        ],
+    onPressed: ()=> showModalBottomSheet
+    (
+      context: context,
+      builder: (context) => Container
+      (    
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        height: height,
+        child: Column
+        (
+          children:
+          [
+            SizedBox(height: 16),
+            _searchBar(context),
+            SizedBox(height: 16),        
+            provider.textCheck == "" ?
+            Divider(color: Styles.softGreyColor, indent: 16, endIndent: 16,thickness: 2) : Center(), 
+            SizedBox(height: 16),
+            provider.textCheck == "" ? _favs(context) : _sehirList(context),
+          ],
+        ),
       ),
+      backgroundColor: Styles.whiteColor,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
     ),
-    backgroundColor: Styles.whiteColor,
-    isScrollControlled: true,
-    useSafeArea: true,
-    showDragHandle: true,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+    icon: Icon(Icons.keyboard_arrow_down_rounded, color: iconProv.fontRenkKontrol())
   );
 }
 

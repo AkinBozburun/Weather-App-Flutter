@@ -371,143 +371,138 @@ _page1(con)
 _page2(con)
 {
   final prov = Provider.of<VisualProvider>(con);
-  final providerWeather = Provider.of<WeatherFetch>(con);
+  final weatherProvider = Provider.of<WeatherFetch>(con);
 
   Widget div = Divider
   (
-    color: providerWeather.fontRenkKontrol(),
-    thickness: 0.2,
-    indent: 20,
-    endIndent: 16,
-    height: 24
+    color: weatherProvider.fontRenkKontrol(),
+    thickness: 0.1,
   );
 
   return SafeArea
   (
-    child: SingleChildScrollView
+    child: Column
     (
-      child: Column
-      (
-        children:
-        [
-          SizedBox(height: 16),
-          Container //Saatlik Penceresi
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children:
+      [
+        Container //Saatlik Penceresi
+        (
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          height: MediaQuery.of(con).size.height * 0.5,
+          width: MediaQuery.of(con).size.width,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration
           (
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: MediaQuery.of(con).size.height * 0.5,
-            width: MediaQuery.of(con).size.width,
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration
-            (
-              color: Colors.black12, borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column
-            (
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children:
-              [
-                Row
+            color: weatherProvider.panelRenkKontrol(), borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column
+          (
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children:
+            [
+              Row
+              (
+                children:
+                [
+                  Text("Günün Tahminleri",
+                  style: GoogleFonts.inter(textStyle: Styles().hourlyForecastTitle, color: weatherProvider.fontRenkKontrol())),
+                  Spacer(),
+                  _switchButton(prov.switchIcon, ()=> prov.switchIconChange(), con),
+                ],
+              ),
+              Container //Grafik ve Liste Penceresi
+              (
+                height: MediaQuery.of(con).size.height * 0.4,
+                child: _hourly(prov.switchIcon, con, div),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 16),
+        Container //7 Günlük Tahminler
+        (
+          height: MediaQuery.of(con).size.height * 0.26,
+          padding: const EdgeInsets.symmetric(horizontal: 8),            
+          child: ListView.builder
+          (
+            scrollDirection: Axis.horizontal,
+            itemCount: 8,
+            itemBuilder: (con, i)
+            {
+              if (i == 0) return Center();
+              return Container
+              (
+                width: MediaQuery.of(con).size.width * 0.26,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration
                 (
+                  color: weatherProvider.panelRenkKontrol(),
+                  borderRadius: BorderRadius.circular(24)
+                ),
+                child: Column
+                (
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children:
                   [
-                    Text("Günün Tahminleri", style: GoogleFonts.inter(textStyle: Styles().hourlyForecastTitle)),
-                    Spacer(),
-                    _switchButton(prov.switchIcon,()=> prov.switchIconChange()),
+                    Text
+                    (
+                      DateFormat.EEEE().format(DateTime.fromMillisecondsSinceEpoch(
+                        weatherProvider.dailyData[i].time * 1000)),
+                      style: GoogleFonts.inter(textStyle: Styles().dailyForecastText,
+                      color: weatherProvider.fontRenkKontrol()),
+                    ),
+                    div,
+                    SizedBox
+                    (
+                      height:
+                      MediaQuery.of(con).size.height * 0.1 > 80 ? 80 :
+                      MediaQuery.of(con).size.height * 0.1,
+                      child: DataControl().iconCheck(weatherProvider.dailyData[i].icon,false),
+                    ),
+                    div,
+                    Text
+                    (
+                      "${weatherProvider.dailyData[i].day.toInt()}\u00b0 / ${weatherProvider.dailyData[i].night.toInt()}\u00b0",
+                      style: GoogleFonts.inter(textStyle: Styles().dailyForecastText,
+                      color: weatherProvider.fontRenkKontrol()),
+                    ),
                   ],
                 ),
-                Container //Grafik ve Liste Penceresi
-                (
-                  height: MediaQuery.of(con).size.height * 0.4,
-                  child: _hourly(prov.switchIcon, con),
-                ),
-              ],
-            ),
+              );
+            },
           ),
-          SizedBox(height: 24),
-          Container //7 Günlük Tahminler
-          (
-            height: MediaQuery.of(con).size.height * 0.25,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: ListView.builder
-            (
-              scrollDirection: Axis.horizontal,
-              itemCount: 8,
-              itemBuilder: (con, i)
-              {
-                if (i == 0) return Center();
-                return Container
-                (
-                  width: MediaQuery.of(con).size.width * 0.26,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration
-                  (
-                    color: providerWeather.panelRenkKontrol(),
-                    borderRadius: BorderRadius.circular(24)
-                  ),
-                  child: Column
-                  (
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:
-                    [
-                      Text
-                      (
-                        DateFormat.EEEE().format(DateTime.fromMillisecondsSinceEpoch(
-                          providerWeather.dailyData[i].time * 1000)),
-                        style: GoogleFonts.inter(textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: providerWeather.fontRenkKontrol()))
-                      ),
-                      div,
-                      SizedBox
-                      (
-                        height:
-                        MediaQuery.of(con).size.height * 0.1 > 80 ? 80 :
-                        MediaQuery.of(con).size.height * 0.1,
-                        child: DataControl().iconCheck(providerWeather.dailyData[i].icon,false),
-                      ),
-                      div,
-                      Text
-                      (
-                        "${providerWeather.dailyData[i].day.toInt()}\u00b0 / ${providerWeather.dailyData[i].night.toInt()}\u00b0",
-                        style: GoogleFonts.inter(textStyle: TextStyle
-                        (
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: providerWeather.fontRenkKontrol()
-                        )),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
+      ],
+    ),
+  );
+}
+
+_switchButton(switchIcon, tap, context)
+{
+  final iconProv = Provider.of<WeatherFetch>(context);
+
+  return InkWell
+  (
+    onTap: tap,
+    child: Container
+    (
+      width: 42,
+      height: 36,
+      child: switchIcon == true ? Image.asset("images icons/chart_icon.png", color: iconProv.fontRenkKontrol()) :
+      Image.asset("images icons/list_icon.png", color: iconProv.fontRenkKontrol()),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration
+      (
+        color:Colors.black12,
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
   );
 }
 
-_switchButton(switchIcon, tap) => InkWell
-(
-  onTap: tap,
-  child: Container
-  (
-    width: 42,
-    height: 36,
-    child: switchIcon == true ? Image.asset("images icons/chart_icon.png") :
-    Image.asset("images icons/list_icon.png"),      
-    padding: const EdgeInsets.all(4),
-    decoration: BoxDecoration
-    (
-      color:Colors.black12,
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
-);
-
-_hourly(switchIcon,con)
+_hourly(switchIcon,con,div)
 {
   final prov = Provider.of<WeatherFetch>(con);
 
@@ -550,12 +545,12 @@ _hourly(switchIcon,con)
             Text
             (
               time(prov.hourlyData[index].time),
-              style: Styles().hourlyForecastListText,
+              style: GoogleFonts.inter(textStyle: Styles().hourlyForecastListText, color: prov.fontRenkKontrol()),
             ),
             Row(children:
             [
               Text(prov.hourlyData[index].temp.toInt().toString()+"°",
-              style: Styles().hourlyForecastListText),
+              style: GoogleFonts.inter(textStyle: Styles().hourlyForecastListText, color: prov.fontRenkKontrol())),
               SizedBox(width: 8),
               SizedBox //Icon
               (
@@ -567,12 +562,13 @@ _hourly(switchIcon,con)
             SizedBox
             (
               width: 80,
-              child: Text(prov.hourlyData[index].describtion,style: Styles().hourlyForecastListText,textAlign: TextAlign.end),
+              child: Text(prov.hourlyData[index].describtion,
+              style: GoogleFonts.inter(textStyle: Styles().hourlyForecastListText, color: prov.fontRenkKontrol()), textAlign: TextAlign.end),
             ),
           ]
         ),
       ),
-      separatorBuilder: (BuildContext context, int index) =>  Divider(color: Colors.white24),
+      separatorBuilder: (BuildContext context, int index) =>  div,
     );
   }
 }
