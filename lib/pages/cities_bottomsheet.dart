@@ -10,18 +10,27 @@ class CitySheetWithButton extends StatelessWidget
   const CitySheetWithButton({Key? key}) : super(key: key);  
 
   @override
-  Widget build(BuildContext context) => bottomSheet(context);
+  Widget build(BuildContext context) => iconButton(context);
+}
+
+iconButton(context)
+{
+  final iconProv = Provider.of<WeatherFetch>(context);
+  
+  return IconButton
+  (
+    onPressed: () => bottomSheet(context),
+    icon: Icon(Icons.keyboard_arrow_down_rounded, color: iconProv.fontRenkKontrol())
+  );
+  
 }
 
 bottomSheet(context)
 {
   final provider = Provider.of<VisualProvider>(context,listen: false);
-  final iconProv = Provider.of<WeatherFetch>(context);
   final double height = MediaQuery.of(context).size.height;
 
-  return IconButton
-  (
-    onPressed: ()=> showModalBottomSheet
+  return showModalBottomSheet
     (
       context: context,
       builder: (context) => Container
@@ -47,9 +56,8 @@ bottomSheet(context)
       useSafeArea: true,
       showDragHandle: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-    ),
-    icon: Icon(Icons.keyboard_arrow_down_rounded, color: iconProv.fontRenkKontrol())
-  );
+    );
+    
 }
 
 _searchBar(context)
@@ -113,7 +121,7 @@ _searchBar(context)
 
 _sehirList(context)
 {
-  final prov = Provider.of<WeatherFetch>(context);
+  final prov = Provider.of<WeatherFetch>(context, listen:  false);
   final prov2 = Provider.of<VisualProvider>(context);
 
   return Container

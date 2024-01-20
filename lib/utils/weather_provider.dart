@@ -218,9 +218,9 @@ class WeatherFetch extends ChangeNotifier
   panelRenkKontrol()
   {
     if (icon == "13d" || icon == "13n") {
-      return Colors.black12;
+      return Styles.panelBlackColor;
     } else {
-      return Colors.white10;
+      return Styles.panelWhiteColor;
     }
   }
 }

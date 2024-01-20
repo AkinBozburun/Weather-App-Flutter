@@ -1,8 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:my_weather_app/models/weather_model.dart';
 import 'package:my_weather_app/utils/styles.dart';
+import 'package:my_weather_app/utils/weather_provider.dart';
+import 'package:provider/provider.dart';
 
 class FLChart extends StatelessWidget {
   final List<FlSpot> spots;
@@ -36,19 +39,22 @@ class FLChart extends StatelessWidget {
               tooltipBgColor: Colors.black45,
               getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                 return touchedBarSpots.map((barSpot) {
-                  return LineTooltipItem("${barSpot.y.toInt()} \u2103",Styles().hourlyForecastChartText);
+                  return LineTooltipItem("${barSpot.y.toInt()} \u2103", GoogleFonts.inter
+                  (
+                    textStyle: Styles().hourlyForecastChartText, color: Styles.whiteColor
+                  ));
                 }).toList();
               },
             ),
           ),
-          titlesData: getTitleData(),
+          titlesData: getTitleData(context),
           gridData: FlGridData(show: false),
           borderData: FlBorderData(show: false),
           lineBarsData: [
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              colors: [Colors.white],
+              colors: [Provider.of<WeatherFetch>(context).fontRenkKontrol()],
               barWidth: 4,
               belowBarData: BarAreaData(
                 show: true,
@@ -56,23 +62,31 @@ class FLChart extends StatelessWidget {
               ),
             )
           ]));
-  getTitleData() => FlTitlesData(
-        bottomTitles: SideTitles(
-          showTitles: true,
-          getTextStyles: (context, value) => Styles().hourlyForecastChartText,
-          getTitles: (value) {
-            for (int i = 0; i < 24; i++) {
-              if (value == i)
-                return DateFormat.Hm().format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        timeList[i].time * 1000));
-              i++;
-            }
-            return "";
-          },
-        ),
-        topTitles: SideTitles(),
-        rightTitles: SideTitles(),
-        leftTitles: SideTitles(),
-      );
+
+  getTitleData(context)
+  {
+    final prov = Provider.of<WeatherFetch>(context);
+
+    return FlTitlesData
+    (
+      bottomTitles: SideTitles
+      (
+        showTitles: true,
+        getTextStyles: (context, value) => GoogleFonts.inter(textStyle:  Styles().hourlyForecastChartText, color: prov.fontRenkKontrol()),
+        getTitles: (value)
+        {
+          for (int i = 0; i < 24; i++)
+          {
+            if (value == i)
+              return DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(timeList[i].time * 1000));
+            i++;
+          }
+          return "";
+        },
+      ),
+      topTitles: SideTitles(),
+      rightTitles: SideTitles(),
+      leftTitles: SideTitles(),
+    );
+  }
 }

@@ -63,35 +63,36 @@ class _WeatherPageState extends State<WeatherPage>
       )
     );
 
-    final provider = Provider.of<WeatherFetch>(context);
-
-    return provider.derece == null ?
-    Scaffold
+    return Consumer<WeatherFetch>
     (
-      backgroundColor: Color(0xff44B0FF),
-      body: Center(child: CircularProgressIndicator(color: Styles.whiteColor)),
-    ) :
-    Scaffold
-    (      
-      appBar: _appbar(context),
-      body: DataControl().backGroundCheck
+      builder: (context, value, child) => value.derece == null ?
+      Scaffold
       (
-        provider.icon,
-        MediaQuery.of(context).size.height,
-        MediaQuery.of(context).size.width,
-        PageView
+        backgroundColor: Color(0xff44B0FF),
+        body: Center(child: CircularProgressIndicator(color: Styles.whiteColor)),
+      ) :
+      Scaffold
+      (      
+        appBar: _appbar(context),
+        body: DataControl().backGroundCheck
         (
-          scrollDirection: Axis.horizontal,
-          children:
-          [
-            _page1(context),
-            _page2(context),
-          ],
-        ),  
-      ),
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-    );
+          value.icon,
+          MediaQuery.of(context).size.height,
+          MediaQuery.of(context).size.width,
+          PageView
+          (
+            scrollDirection: Axis.horizontal,
+            children:
+            [
+              _page1(context),
+              _page2(context),
+            ],
+          ),  
+        ),
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+      )
+    );    
   }
 }
 
@@ -284,16 +285,10 @@ _page1(con)
               children:
               [
                 Text(capitilized(prov.aciklama),
-                style: GoogleFonts.inter(textStyle: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: prov.fontRenkKontrol()))),
+                style: GoogleFonts.inter(textStyle: Styles().mainDiscribeText, color: prov.fontRenkKontrol())),
                 SizedBox(height: 6),
                 Text("${prov.derece?.toInt()} \u2103",
-                style: GoogleFonts.inter(textStyle: TextStyle(
-                  fontSize: 48,
-                  color: prov.fontRenkKontrol(),
-                  fontWeight: FontWeight.bold))),
+                style: GoogleFonts.inter(textStyle: Styles().mainWeatherText,color: prov.fontRenkKontrol())),
               ],
             ),
             SizedBox(height: 8),
@@ -312,52 +307,31 @@ _page1(con)
               (
                 children:
                 [
-                  ListTile(
+                  ListTile
+                  (
                     leading: FaIcon(FontAwesomeIcons.water,
-                        color: prov.fontRenkKontrol()), 
+                      color: prov.fontRenkKontrol()), 
                     title: Text("Nem",
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                color: prov.fontRenkKontrol()))),
+                      style: GoogleFonts.inter(textStyle: Styles().mainDetailsText, color: prov.fontRenkKontrol())),
                     trailing: Text("% ${prov.nem}",
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                color: prov.fontRenkKontrol()))),
+                      style: GoogleFonts.inter(textStyle: Styles().mainDetailsText, color: prov.fontRenkKontrol())),
                   ),
-                  ListTile(
-                    leading: FaIcon(FontAwesomeIcons.temperatureHigh,
-                        color: prov
-                            .fontRenkKontrol()),
+                  ListTile
+                  (
+                    leading: FaIcon(FontAwesomeIcons.temperatureHigh, color: prov.fontRenkKontrol()),
                     title: Text("Hissedilen",
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                color: prov.fontRenkKontrol()))),
-                    trailing: Text(
-                        "${prov.hissedilen?.toInt()} \u2103",
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                color: prov
-                                    .fontRenkKontrol()))),
+                      style: GoogleFonts.inter(textStyle: Styles().mainDetailsText, color: prov.fontRenkKontrol())),
+                    trailing: Text("${prov.hissedilen?.toInt()} \u2103",
+                      style: GoogleFonts.inter(textStyle: Styles().mainDetailsText, color: prov.fontRenkKontrol())),
                   ),
-                  ListTile(
-                    leading: FaIcon(FontAwesomeIcons.wind,
-                        color: prov
-                            .fontRenkKontrol()),
+                  ListTile
+                  (
+                    leading: FaIcon(FontAwesomeIcons.wind, color: prov.fontRenkKontrol()),
                     title: Text("Rüzgar",
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                color: prov.fontRenkKontrol()))),
+                      style: GoogleFonts.inter(textStyle: Styles().mainDetailsText, color: prov.fontRenkKontrol())),
                     trailing: Text("${prov.ruzgar?.toInt()} km/s",
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                color: prov.fontRenkKontrol()))),
-                  ),
+                      style: GoogleFonts.inter(textStyle: Styles().mainDetailsText, color: prov.fontRenkKontrol())),
+                  )
                 ],
               ),
             ),
@@ -568,7 +542,7 @@ _hourly(switchIcon,con,div)
           ]
         ),
       ),
-      separatorBuilder: (BuildContext context, int index) =>  div,
+      separatorBuilder: (BuildContext context, int index) => div,
     );
   }
 }
